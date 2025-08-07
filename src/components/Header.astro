@@ -1,0 +1,122 @@
+---
+interface Props {
+  isHomePage?: boolean;
+}
+
+const { isHomePage = false } = Astro.props;
+
+const navLinks = [
+  { href: "/", text: "Inicio" },
+  { href: "/productos", text: "Productos" },
+  { href: "/nosotros", text: "Nosotros" },
+  { href: "/ubicacion", text: "Ubicación" },
+];
+
+// Conditional classes for the navbar
+const navbarClasses = ["w-full flex items-center justify-between mb-6 px-6 py-4 md:px-12 lg:px-16", isHomePage ? "bg-white" : "bg-transparent"];
+const homeLinkClasses = "text-gray-900 hover:bg-primary/10 hover:text-primary";
+const otherLinkClasses = "text-white hover:bg-white/25";
+const linkClasses = isHomePage ? homeLinkClasses : otherLinkClasses;
+---
+
+<header class:list={navbarClasses}>
+    <a href="/" class="w-16 min-w-16 md:w-20">
+        <img src="/logo.svg" alt="Venepan Logo" />
+    </a>
+
+    <nav class="hidden sm:flex">
+        <ul class="flex gap-3 text-sm md:gap-4 lg:gap-6">
+            {navLinks.map(link => (
+                <li>
+                    <a href={link.href} class:list={["px-3 py-1.5 rounded-2xl", linkClasses]}>{link.text}</a>
+                </li>
+            ))}
+        </ul>
+    </nav>
+
+    <button class="btn text-sm hidden sm:flex">Contáctanos</button>
+    
+    <button 
+        class="menu-button sm:hidden cursor-pointer z-50" 
+        data-menu-button aria-controls="mobile-menu" aria-expanded="false" >
+        <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14"/>
+        </svg>
+    </button>
+</header>
+
+<div 
+    id="mobile-menu"
+    data-menu-container class="fixed inset-0 z-40 sm:hidden pointer-events-none" >
+    <div 
+        data-menu-backdrop 
+        class="fixed inset-0 bg-gray-700/45 transition-opacity duration-300 ease-in-out opacity-0"
+    ></div>
+
+    <div 
+        data-menu-content
+        class="bg-white border-r-1 border-gray-200 py-4 px-6 flex flex-col fixed top-0 left-0 w-5/6 min-w-60 max-w-sm h-screen z-50 transition-transform duration-300 ease-in-out transform -translate-x-full" >
+        <div class="flex items-center justify-between w-full mb-14">
+            <a href="/" class="w-16">
+                <img src="/logo.svg" alt="Venepan Logo"/>
+            </a>
+
+            <button 
+            data-close-menu-button
+            class="cursor-pointer">
+                <svg class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                </svg>
+            </button>
+            
+        </div>
+
+        <nav class="flex flex-col justify-between w-full h-full">
+            <ul class="flex flex-col gap-3 text-sm w-full">
+                {navLinks.map(link => (
+                    <li class="w-full">
+                        <a href={link.href} class="block w-full px-4 py-3 cursor-pointer hover:bg-primary/10 hover:rounded-lg hover:font-semibold hover:text-primary">
+                            {link.text}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+    
+            <div class="w-full flex flex-col gap-4 mt-8">
+                <button class="btn text-sm w-fill">Contáctanos</button>
+                <p class="text-sm text-gray-500 self-center">Copyright © Alimentos Venepan</p>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<script>
+    const menuButton = document.querySelector('[data-menu-button]');
+    const menuContainer = document.querySelector('[data-menu-container]');
+    const menuBackdrop = document.querySelector('[data-menu-backdrop]');
+    const menuContent = document.querySelector('[data-menu-content]');
+    const closeMenuButton = document.querySelector('[data-close-menu-button]');
+
+    function toggleMenu() {
+        const isExpanded = menuButton?.getAttribute('aria-expanded') === 'true';
+
+        // Sets ARIA
+        menuButton?.setAttribute('aria-expanded', String(!isExpanded));
+
+        // Toggl clickable state
+        menuContainer?.classList.toggle('pointer-events-none');
+        
+        // Backdrop animation (fade in/out)
+        menuBackdrop?.classList.toggle('opacity-0');
+        
+        // Menu animation (slide in/out)
+        menuContent?.classList.toggle('-translate-x-full');
+
+        document.body.classList.toggle('overflow-hidden');
+    }
+
+    // Open and close menu
+    menuButton?.addEventListener('click', toggleMenu);
+    closeMenuButton?.addEventListener('click', toggleMenu);
+    menuBackdrop?.addEventListener('click', toggleMenu);
+</script>

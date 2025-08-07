@@ -1,1 +1,51 @@
 @import "tailwindcss";
+
+@theme {
+    --color-primary: #D73137;
+    --color-secondary: #0060B3;
+    --color-light-blue: rgb(225,236,247, 0.8);
+    --color-light-green: #C9EAC3;
+
+    --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@layer components {
+    .main-title {
+        @apply font-bold text-3xl text-gray-900 mb-4 md:text-4xl lg:text-5xl;
+
+    }
+    .section-title {
+        @apply font-semibold text-2xl text-gray-900 mb-3 md:text-3xl lg:text-4xl;
+
+    }
+    .text {
+        @apply text-base text-gray-900 mb-6 md:text-lg;
+        line-height: normal;
+    }
+    .btn {
+        @apply bg-primary min-w-32 inline-flex items-center justify-center font-semibold text-white px-5 py-3 rounded-3xl hover:bg-primary/90 cursor-pointer tracking-wide; 
+    }
+    /* .mobile-menu {
+        transition: transform 0.3s cubic-bezier(.4,0,.2,1), opacity 0.3s;
+        transform: translateX(-100%);
+        opacity: 0;
+        pointer-events: none;
+    } */
+    /* .mobile-menu.active {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+    } */
+}
+
+html {
+  font-family: var(--font-sans);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; 
+  overflow-x: hidden;
+}

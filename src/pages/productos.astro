@@ -1,13 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
 import Header from '../components/Header.astro';
+
+const products = await getCollection('products');
  
 ---
 
-<Layout title="Inicio">
-    <Header isHomePage={true}/>
+<Layout title="Productos">
+    <Header isHomePage={false}/>
     <div class="px-6 md:px-12 lg:px-16">
-        <h1 class="main-title">Landing Page Venepan</h1>
+        <h1 class="main-title">Product Page Venepan</h1>
         <h2 class="section-title">Titulo de seccion</h2>
         <p class="text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea quam eaque veritatis sunt maxime ipsa voluptate magni consequatur optio dolores, asperiores illo veniam rem nihil dignissimos iure dicta voluptatem impedit!</p>
     </div>
