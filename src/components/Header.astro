@@ -4,6 +4,7 @@ interface Props {
 }
 
 const { isHomePage = false } = Astro.props;
+const currentPath = Astro.url.pathname;
 
 const navLinks = [
   { href: "/", text: "Inicio" },
@@ -12,11 +13,18 @@ const navLinks = [
   { href: "/ubicacion", text: "Ubicación" },
 ];
 
-// Conditional classes for the navbar
+// Conditional classes for desktop navbar
 const navbarClasses = ["w-full flex items-center justify-between mb-6 px-6 py-4 md:px-12 lg:px-16", isHomePage ? "bg-white" : "bg-transparent"];
 const homeLinkClasses = "text-gray-900 hover:bg-primary/10 hover:text-primary";
 const otherLinkClasses = "text-white hover:bg-white/25";
 const linkClasses = isHomePage ? homeLinkClasses : otherLinkClasses;
+
+// Classes for the active link
+const MobileLinkClasses = "block w-full px-4 py-3 cursor-pointer hover:bg-primary/10 hover:rounded-lg hover:font-semibold hover:text-primary"
+const activeClassesDesktop = isHomePage ? "bg-primary/10 text-primary" : "bg-white/25";
+const activeClassesMobile = "bg-primary/10 rounded-lg font-semibold text-primary";
+
+
 ---
 
 <header class:list={navbarClasses}>
@@ -26,11 +34,24 @@ const linkClasses = isHomePage ? homeLinkClasses : otherLinkClasses;
 
     <nav class="hidden sm:flex">
         <ul class="flex gap-3 text-sm md:gap-4 lg:gap-6">
-            {navLinks.map(link => (
-                <li>
-                    <a href={link.href} class:list={["px-3 py-1.5 rounded-2xl", linkClasses]}>{link.text}</a>
-                </li>
-            ))}
+            {navLinks.map(link => {
+                // Check if the current link is active
+                const isActive = currentPath === link.href;
+                return (
+                    <li>
+                        <a 
+                            href={link.href} 
+                            class:list={[
+                                "px-3 py-1.5 rounded-2xl transition-colors duration-200", 
+                                linkClasses,
+                                isActive && activeClassesDesktop // Apply active classes if the link is active
+                            ]}
+                        >
+                            {link.text}
+                        </a>
+                    </li>
+                )
+            })}
         </ul>
     </nav>
 
@@ -73,13 +94,22 @@ const linkClasses = isHomePage ? homeLinkClasses : otherLinkClasses;
 
         <nav class="flex flex-col justify-between w-full h-full">
             <ul class="flex flex-col gap-3 text-sm w-full">
-                {navLinks.map(link => (
-                    <li class="w-full">
-                        <a href={link.href} class="block w-full px-4 py-3 cursor-pointer hover:bg-primary/10 hover:rounded-lg hover:font-semibold hover:text-primary">
-                            {link.text}
-                        </a>
-                    </li>
-                ))}
+                {navLinks.map(link => {
+                    const isActive = currentPath === link.href;
+                    return (
+                        <li class="w-full">
+                            <a 
+                                href={link.href}
+                                class:list={[
+                                    MobileLinkClasses,
+                                    isActive && activeClassesMobile 
+                                ]}
+                            >
+                                {link.text}
+                            </a>
+                        </li>
+                    )
+                })}
             </ul>
     
             <div class="w-full flex flex-col gap-4 mt-8">
