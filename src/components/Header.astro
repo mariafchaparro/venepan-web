@@ -10,7 +10,8 @@ const navLinks = [
   { href: "/", text: "Inicio" },
   { href: "/productos", text: "Productos" },
   { href: "/nosotros", text: "Nosotros" },
-  { href: "/ubicacion", text: "Ubicación" },
+  { href: "/recetas", text: "Recetas" },
+  { href: "/ubicacion", text: "Ubicación" }
 ];
 
 // Conditional classes for desktop navbar
@@ -32,7 +33,7 @@ const activeClassesMobile = "bg-primary/10 rounded-lg font-semibold text-primary
         <img src="/logo.svg" alt="Venepan Logo" />
     </a>
 
-    <nav class="hidden sm:flex">
+    <nav class="hidden md:flex">
         <ul class="flex gap-3 text-sm md:gap-4 lg:gap-6">
             {navLinks.map(link => {
                 // Check if the current link is active
@@ -55,10 +56,10 @@ const activeClassesMobile = "bg-primary/10 rounded-lg font-semibold text-primary
         </ul>
     </nav>
 
-    <button class="btn text-sm hidden sm:flex">Contáctanos</button>
+    <button class="btn text-sm hidden md:flex">Contáctanos</button>
     
     <button 
-        class="menu-button sm:hidden cursor-pointer z-50" 
+        class="menu-button md:hidden cursor-pointer z-50" 
         data-menu-button aria-controls="mobile-menu" aria-expanded="false" >
         <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14"/>
@@ -68,7 +69,7 @@ const activeClassesMobile = "bg-primary/10 rounded-lg font-semibold text-primary
 
 <div 
     id="mobile-menu"
-    data-menu-container class="fixed inset-0 z-40 sm:hidden pointer-events-none" >
+    data-menu-container class="fixed inset-0 z-40 md:hidden pointer-events-none" >
     <div 
         data-menu-backdrop 
         class="fixed inset-0 bg-gray-700/45 transition-opacity duration-300 ease-in-out opacity-0"
