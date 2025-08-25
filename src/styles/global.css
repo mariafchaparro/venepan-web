@@ -30,19 +30,6 @@
     .btn {
         @apply bg-primary min-w-32 inline-flex items-center justify-center font-semibold text-white px-5 py-3 rounded-3xl hover:bg-red-800/90 cursor-pointer tracking-wide; 
     }
-    .footer-area {
-        grid-template-areas: 
-        "logo"
-        "slogan"
-        "contact    navigation"
-        "copy       social-media";
-    }
-    .footer-area-md {
-        grid-template-areas: 
-        "logo"
-        "slogan     contact     navigation"
-        "copy       navigation  social-media";
-    }
     .section-padding {
         @apply p-6 md:p-12 lg:p-28 xl:px-36;
     }
