@@ -1,0 +1,22 @@
+---
+import Image from "astro/components/Image.astro"
+import iahfcLogo from "../../assets/images/inicio/iahfc.png";
+---
+
+<section class="flex flex-col md:flex-row">
+    <div class="bg-white w-full section-padding flex flex-col justify-center items-center md:items-start md:w-1/2">
+        <h2 class="section-title  mt-4 md:mt-0 lg:mb-6">Pertenecemos a la IAHFC</h2>
+        <p class="text text-center max-w-[50ch] md:text-start">La IAHFC está ubicada en 8 países del territorio de la División Interamericana (DIA).En esta laboran más de 700 empleados, quienes con su pasión y esfuerzo, son el motor del Ministerio de Alimentación Saludable.</p>
+    </div>
+
+    <div class="w-full md:w-1/2 md:min-h-0 flex justify-center items-center">
+        <Image 
+        src={iahfcLogo}
+        alt="iahfc logo"
+        width={600}
+        height={100}
+        format="webp"
+        class="w-64 max-w-[450px] lg:w-3/4 mb-4 md:mb-0"
+        />
+    </div>
+</section>
