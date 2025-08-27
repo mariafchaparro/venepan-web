@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+
+const reviews = await getCollection('reviews');
+---
+
+<section class="reviews-background section-padding flex flex-col items-center justify-center lg:mx-12 lg:rounded-4xl">
+    
+<h2 class="section-title text-center mb-10 mt-4 md:mt-0  md:mb-12">¿Qué dicen nuestros clientes?</h2>
+    
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
+
+        {
+        reviews.map((review) => (
+            <article class="flex flex-col justify-between min-w-[275px] max-w-[434px] p-5 bg-white rounded-3xl card-shadow">
+           
+            <div>
+                <div class="w-fill flex justify-between items-center mb-4">
+                    <h3 class="text-gray-800 text-lg font-medium m-0">{review.data.name}</h3>
+                    <h4 class="light-text mb-0 text-sm font-medium">{review.data.date}</h4>
+                </div>
+                <p class="w-full text mb-0">
+                    {review.data.content}
+                </p>
+            </div>
+
+            <div class="w-full text-right mt-2 lg:mt-6">
+                {
+                    Array.from({ length: review.data.stars }).map(() => (
+                        <img src="/icons/star.svg" alt="Estrella" class="inline w-6 h-6 ml-1"/>
+                    ))
+                }
+            
+            </div>
+        </article>
+        ))
+    }
+    </div>
+
+</section>
