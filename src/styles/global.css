@@ -13,11 +13,11 @@
 
 @layer components {
     .main-title {
-        @apply font-bold text-3xl text-gray-800 mb-4 md:text-4xl lg:text-5xl;
+        @apply font-bold text-4xl text-gray-800 mb-4 md:text-4xl lg:text-5xl;
 
     }
     .section-title {
-        @apply font-semibold text-2xl text-gray-800 mb-3 mt-4 md:mt-0 md:text-3xl lg:text-4xl;
+        @apply font-semibold text-3xl text-gray-800 mb-6 mt-4 md:mt-0 md:text-3xl lg:text-4xl;
 
     }
     .text {
@@ -42,6 +42,21 @@
         background: url('/src/assets/images/inicio/reviews-background.svg') no-repeat center;
         background-size: cover;
     }
+    /* summary::marker {
+        color: #e162bf;
+        font-size: 1.2em;
+    } */
+    summary {
+        list-style: none;
+        padding: 0px 30px 0px 0px;
+        background: url('/icons/chevron-down-gray.svg') no-repeat right 50%;
+        background-size: 20px;
+        font-weight: bold;
+    }
+    details[open] summary {
+        background: url('/icons/chevron-up-gray.svg') no-repeat right 50%;
+        background-size: 20px;
+    } 
 }
 
 html {
