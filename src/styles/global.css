@@ -17,7 +17,7 @@
 
     }
     .section-title {
-        @apply font-semibold text-3xl text-gray-800 mb-6 mt-4 md:mt-0 md:text-3xl lg:text-4xl;
+        @apply font-semibold text-3xl text-gray-800 mb-6 mt-4 md:mt-0 lg:text-4xl;
 
     }
     .text {
@@ -30,7 +30,7 @@
         @apply bg-primary min-w-32 inline-flex items-center justify-center font-semibold text-white px-5 py-3 rounded-3xl hover:bg-red-800/90 cursor-pointer tracking-wide; 
     }
     .section-padding {
-        @apply px-6 py-10 md:p-12 lg:p-28 xl:px-36 lg:min-h-[556px];
+        @apply px-6 py-10 min-w-[300px] md:p-12 lg:p-28 xl:px-36 lg:min-h-[556px];
     }
     .card-shadow { 
         box-shadow: 0 4px 4px 0 rgba(151, 151, 151, 0.25);
