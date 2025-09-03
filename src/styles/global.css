@@ -38,14 +38,18 @@
     .card-hover {
         @apply transform hover:-translate-y-2 transition-transform duration-300 ease-in-out
     }
+
+    /* SVG backgrounds */
     .reviews-background {
         background: url('/src/assets/images/inicio/reviews-background.svg') no-repeat center;
         background-size: cover;
     }
-    /* summary::marker {
-        color: #e162bf;
-        font-size: 1.2em;
-    } */
+    .CTA-background {
+        background: url('/src/assets/images/inicio/CTA-background.svg') no-repeat center;
+        background-size: cover;
+    }
+
+    /* FAQ */
     summary {
         list-style: none;
         padding: 0px 30px 0px 0px;
