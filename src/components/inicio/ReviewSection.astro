@@ -12,7 +12,9 @@ const reviews = await getCollection('reviews');
 
         {
         reviews.map((review) => (
-            <article class="flex flex-col justify-between min-w-[275px] max-w-[290px] md:max-w-[434px] p-5 bg-white rounded-3xl card-shadow">
+            <article class="flex flex-col justify-between min-w-[275px] max-w-[290px] md:max-w-[434px] p-5 bg-white rounded-3xl card-shadow"
+                data-aos="fade-right"
+                data-aos-offset="200">
            
             <div>
                 <div class="w-fill flex justify-between items-center mb-1">
