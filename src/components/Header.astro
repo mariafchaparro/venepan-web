@@ -1,9 +1,9 @@
 ---
 interface Props {
-  isHomePage?: boolean;
+  classicHeader?: boolean;
 }
 
-const { isHomePage = false } = Astro.props;
+const { classicHeader = false } = Astro.props;
 const currentPath = Astro.url.pathname;
 
 const navLinks = [
@@ -13,15 +13,18 @@ const navLinks = [
   { href: "/recetas", text: "Recetas", icon: "book-open.svg" }
 ];
 
+// const logoSrc = classicHeader ? "/icons/logo.svg" : "/icons/logo.svg";
+
+
 // Conditional classes for desktop navbar
-const navbarClasses = ["w-full flex items-center justify-between px-6 py-4 md:px-12 lg:px-28 xl:px-36", isHomePage ? "bg-white" : "bg-transparent"];
+const navbarClasses = ["w-full flex items-center justify-between px-6 py-4 md:px-12 lg:px-28 xl:px-36", classicHeader ? "" : "fixed z-40"];
 const homeLinkClasses = "text-gray-800 hover:text-primary hover:font-medium";
 const otherLinkClasses = "text-white hover:bg-white/25";
-const linkClasses = isHomePage ? homeLinkClasses : otherLinkClasses;
+const linkClasses = classicHeader ? homeLinkClasses : otherLinkClasses;
 
 // Classes for the active link
 const MobileLinkClasses = "block w-full px-4 py-3 cursor-pointer hover:bg-primary/5 hover:rounded-xl hover:font-semibold hover:text-primary"
-const activeClassesDesktop = isHomePage ? "text-primary text-gray-800 font-medium" : "bg-white/25";
+const activeClassesDesktop = classicHeader ? "text-primary text-gray-800 font-medium" : "bg-white/25";
 const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary";
 
 
@@ -29,7 +32,7 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
 
 <header class:list={navbarClasses}>
     <a href="/" class="w-16 min-w-16 md:w-20">
-        <img src="/icons/logo.svg" alt="Venepan Logo" loading="eager"/>
+        <img src="icons/logo.svg" alt="Venepan Logo" loading="eager"/>
     </a>
 
     <nav class="hidden md:flex">
@@ -56,8 +59,8 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
     </nav>
 
     <div class="hidden md:flex gap-2 items-center">
-        <a href="" class="text-primary text-sm font-semibold">Login</a>
-        <hr class="rotate-90 w-3 h-0.5 text-gray-700" />
+        <a href="" class:list={["text-sm font-semibold", classicHeader? "text-primary" : "text-white"]}>Login</a>
+        <hr class:list={["rotate-90 w-3 h-0.5", classicHeader? "text-gray-700" : "text-white"]}/>
         <button class="btn text-sm hidden md:flex">Contáctanos</button>
     </div>
     
