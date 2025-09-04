@@ -1,10 +1,12 @@
 ---
 interface Props {
   classicHeader?: boolean;
+  class?: string;
 }
 
-const { classicHeader = false } = Astro.props;
+const { classicHeader = false, class: extraClass } = Astro.props;
 const currentPath = Astro.url.pathname;
+const menuIcon = classicHeader ? "/icons/menu.svg" : "/icons/menu-white.svg"
 
 const navLinks = [
   { href: "/", text: "Inicio", icon: "home.svg" },
@@ -12,9 +14,6 @@ const navLinks = [
   { href: "/nosotros", text: "Nosotros", icon: "users.svg" },
   { href: "/recetas", text: "Recetas", icon: "book-open.svg" }
 ];
-
-// const logoSrc = classicHeader ? "/icons/logo.svg" : "/icons/logo.svg";
-
 
 // Conditional classes for desktop navbar
 const navbarClasses = ["w-full flex items-center justify-between px-6 py-4 md:px-12 lg:px-28 xl:px-36", classicHeader ? "" : "fixed z-40"];
@@ -26,11 +25,9 @@ const linkClasses = classicHeader ? homeLinkClasses : otherLinkClasses;
 const MobileLinkClasses = "block w-full px-4 py-3 cursor-pointer hover:bg-primary/5 hover:rounded-xl hover:font-semibold hover:text-primary"
 const activeClassesDesktop = classicHeader ? "text-primary text-gray-800 font-medium" : "bg-white/25";
 const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary";
-
-
 ---
 
-<header class:list={navbarClasses}>
+<header class:list={[navbarClasses, Astro.props.class]}>
     <a href="/" class="w-16 min-w-16 md:w-20">
         <img src="icons/logo.svg" alt="Venepan Logo" loading="eager"/>
     </a>
@@ -68,7 +65,7 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
         class="menu-button md:hidden cursor-pointer z-50" 
         data-menu-button aria-controls="mobile-menu" aria-expanded="false" >
 
-        <img src="/icons/menu.svg" alt="Abrir menu" class="w-5 h-5">
+        <img src={menuIcon} alt="Abrir menu" class="w-5 h-5">
     </button>
 </header>
 

@@ -1,0 +1,15 @@
+---
+import Header from '../Header.astro';
+---
+
+<section class="relative w-full h-[70vh] md:rounded-b-[52px]">
+    <img src="/src/assets/images/nosotros/banner-nosotros.svg" alt="Banner Nosotros" class="absolute inset-0 w-full h-full md:rounded-b-[52px] object-cover" />
+    <div class="absolute inset-0 bg-black/50 md:rounded-b-[52px]"></div>
+
+    <Header classicHeader={false} class="absolute top-0 left-0 w-full z-20"/>
+
+    <div class="relative z-10 flex flex-col justify-end h-full section-padding md:justify-center">
+        <h1 class="text-white main-title md:mt-12 lg:mt-0">Sobre nosotros</h1>
+        <p class="text-white text-lg/6 font-normal mb-0 max-w-[50ch] md:text-xl/7">Comprometidos con una alimentación saludable y de calidad para cada familia.</p>
+    </div>
+</section>
