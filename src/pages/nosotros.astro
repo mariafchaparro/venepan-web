@@ -1,10 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Banner from '../components/nosotros/Banner.astro';
+import Banner from '../components/DarkBanner.astro';
+import bannerNosotros from "../assets/images/nosotros/banner-nosotros.svg";
 
 ---
 
 <Layout title="Nosotros"> 
-    <Banner />
-
+    <Banner
+        image={bannerNosotros}
+        title="Sobre nosotros"
+        subtitle="Comprometidos con una alimentación saludable y de calidad para cada familia."
+    />
 </Layout>
