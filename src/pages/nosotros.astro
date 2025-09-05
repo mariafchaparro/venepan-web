@@ -2,7 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import Banner from '../components/DarkBanner.astro';
 import bannerNosotros from "../assets/images/nosotros/banner-nosotros.svg";
-
+import WhoAreWeSection from '../components/nosotros/WhoAreWeSection.astro';
+import MissionAndVisionSection from '../components/nosotros/MissionAndVisionSection.astro';
+import OurHistorySection from '../components/nosotros/OurHistorySection.astro';
+import ImageSection from '../components/nosotros/ImageSection.astro';
 ---
 
 <Layout title="Nosotros"> 
@@ -11,4 +14,8 @@ import bannerNosotros from "../assets/images/nosotros/banner-nosotros.svg";
         title="Sobre nosotros"
         subtitle="Comprometidos con una alimentación saludable y de calidad para cada familia."
     />
+    <WhoAreWeSection />
+    <MissionAndVisionSection />
+    <OurHistorySection />
+    <ImageSection />
 </Layout>
