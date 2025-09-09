@@ -28,7 +28,7 @@
         @apply text-gray-600 mb-6 md:text-lg;
     }
     .btn {
-        @apply bg-primary min-w-32 inline-flex items-center justify-center font-semibold text-white px-5 py-3 rounded-3xl hover:bg-red-800/90 cursor-pointer tracking-wide; 
+        @apply bg-primary min-w-32 inline-flex items-center justify-center font-medium text-white px-5 py-3 rounded-3xl hover:bg-red-800/90 cursor-pointer tracking-wide; 
     }
     .section-padding {
         @apply px-6 py-10 min-w-[300px] md:p-12 lg:p-28 xl:px-36 lg:min-h-[556px];
