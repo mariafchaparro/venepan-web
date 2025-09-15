@@ -2,10 +2,10 @@
 interface Props {
   classicHeader?: boolean;
   class?: string;
+  currentPath?: string;
 }
 
-const { classicHeader = false, class: extraClass } = Astro.props;
-const currentPath = Astro.url.pathname;
+const { classicHeader = false, class: extraClass, currentPath } = Astro.props;
 const menuIcon = classicHeader ? "/icons/menu.svg" : "/icons/menu-white.svg"
 
 const navLinks = [

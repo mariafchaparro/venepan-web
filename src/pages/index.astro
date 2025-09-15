@@ -8,10 +8,12 @@ import IAHFCSection from '../components/inicio/IAHFCSection.astro';
 import ReviewSection from '../components/inicio/ReviewSection.astro';
 import FAQSection from '../components/inicio/FAQSection.astro';
 import CTASection from '../components/inicio/CTASection.astro';
+
+const currentPath = Astro.url.pathname
 ---
 
 <Layout title="Inicio">
-    <Header classicHeader={true}/>
+    <Header classicHeader={true} currentPath={currentPath}'/>
     <Banner />
     <ProductSection />
     <AboutSection />
