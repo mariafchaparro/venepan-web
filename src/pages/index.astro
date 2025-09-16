@@ -9,11 +9,11 @@ import ReviewSection from '../components/inicio/ReviewSection.astro';
 import FAQSection from '../components/inicio/FAQSection.astro';
 import CTASection from '../components/inicio/CTASection.astro';
 
-const currentPath = Astro.url.pathname
+export const prerender = true;
 ---
 
 <Layout title="Inicio">
-    <Header classicHeader={true} currentPath={currentPath}'/>
+    <Header classicHeader={true} currentPath={'/'}/>
     <Banner />
     <ProductSection />
     <AboutSection />

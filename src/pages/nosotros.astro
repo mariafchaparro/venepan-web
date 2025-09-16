@@ -6,6 +6,7 @@ import WhoAreWeSection from '../components/nosotros/WhoAreWeSection.astro';
 import MissionAndVisionSection from '../components/nosotros/MissionAndVisionSection.astro';
 import OurHistorySection from '../components/nosotros/OurHistorySection.astro';
 import ImageSection from '../components/nosotros/ImageSection.astro';
+export const prerender = true;
 ---
 
 <Layout title="Nosotros"> 
@@ -13,6 +14,7 @@ import ImageSection from '../components/nosotros/ImageSection.astro';
         image={bannerNosotros}
         title="Sobre nosotros"
         subtitle="Comprometidos con una alimentación saludable y de calidad para cada familia."
+        currentPath="/nosotros"
     />
     <WhoAreWeSection />
     <MissionAndVisionSection />

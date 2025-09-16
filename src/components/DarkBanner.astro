@@ -6,12 +6,14 @@ interface Props {
   image: any;
   title: string;
   subtitle?: string;
+  currentPath: string
 }
 
 const {
   image,
   title,
   subtitle,
+  currentPath
 } = Astro.props;
 
 ---
@@ -28,7 +30,7 @@ const {
   <!-- Overlay -->
   <div class="absolute inset-0 bg-black/50 md:rounded-b-[52px]"></div>
   
-  <Header classicHeader={false} class="absolute top-0 left-0 w-full z-20"/>
+  <Header classicHeader={false} currentPath={currentPath} class="absolute top-0 left-0 w-full z-20"/>
 
   <div class="relative z-10 flex flex-col justify-end h-full section-padding md:justify-center">
     <h1 class="text-white main-title md:mt-12 lg:mt-0">Sobre nosotros</h1>

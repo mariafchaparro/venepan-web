@@ -47,7 +47,7 @@ export default function RecoverForm() {
             ¿Olvidaste tu contraseña?
           </h1>
           <p className="text-gray-600 mb-0 w-[40ch] text-center">
-            No te preocupes, te enviaremos instrucciones para recuperarla
+            No te preocupes, te enviaremos instrucciones para restablecerla
           </p>
         </div>
 

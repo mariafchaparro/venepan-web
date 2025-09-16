@@ -7,8 +7,15 @@ const supabase = createClient(
 );
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const { url, cookies, redirect } = context;
+  const { url, cookies, redirect, isPrerendered } = context;
 
+  // Si la página está prerenderizada, no ejecutar lógica de autenticación
+  // Esto evita el error de acceder a cookies/headers en páginas estáticas
+  if (isPrerendered) {
+    return next();
+  }
+
+  // El resto de tu lógica solo se ejecuta para páginas SSR
   if (url.pathname === '/callback') {
     return next();
   }
