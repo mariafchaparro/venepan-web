@@ -4,7 +4,7 @@
     --color-primary: #D73137;
     --color-secondary: #0060B3;
     --color-light-blue: rgb(225,236,247, 0.8);
-    --color-light-green: #C9EAC3;
+    --color-light-green: #EAFCE0;
     --color-light-gray: rgba(211, 215, 207, 0.51);
     --color-light-gray-2: rgba(236, 242, 243);
 
@@ -31,7 +31,7 @@
         @apply bg-primary min-w-32 inline-flex items-center justify-center font-medium text-white px-5 py-3 rounded-3xl hover:bg-red-800/90 cursor-pointer tracking-wide; 
     }
     .section-padding {
-        @apply px-6 py-10 min-w-[300px] md:p-12 lg:p-28 xl:px-36 lg:min-h-[556px];
+        @apply px-6 py-10 min-w-[300px] sm:p-12 md:p-16 lg:p-20 lg:min-h-[470px];
     }
     .card-shadow { 
         box-shadow: 0 4px 4px 0 rgba(151, 151, 151, 0.25);

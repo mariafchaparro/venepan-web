@@ -1,16 +1,193 @@
 ---
-import { Image } from "astro:assets";
-import banner from "../../assets/images/inicio/banner-inicio.png";
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from "astro";
+import cerealImage from '/src/assets/images/inicio/cereales-banner.svg';
+import panesImage from '/src/assets/images/inicio/panes-banner.svg';
+import soyaImage from '/src/assets/images/inicio/soya-banner.svg';
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
+interface Banner {
+  id: number;
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  image: ImageMetadata;
+  bgGradient: string;
+  theme: 'blue' | 'orange' | 'green'; 
+}
+
+// Objeto de mapeo para estilos
+const themeStyles = {
+  blue: {
+    text: 'text-secondary',
+    bg: 'bg-secondary',
+    hover: 'hover:bg-secondary/90'
+  },
+  orange: {
+    text: 'text-orange-600',
+    bg: 'bg-orange-600',
+    hover: 'hover:bg-orange-600/90'
+  },
+  green: {
+    text: 'text-green-600',
+    bg: 'bg-green-700',
+    hover: 'hover:bg-green-600/90'
+  }
+};
+
+const banners: Banner[] = [
+  {
+    id: 1,
+    title: "¡Crunch, sabor y energía!",
+    description: "Descubre la variedad de nuestros cereales para toda la familia.",
+    buttonText: "Ver productos",
+    buttonLink: "/productos",
+    image: cerealImage,
+    bgGradient: "bg-radial-[at_50%_55%] from-blue-200 from-10% to-light-blue to-60%",
+    theme: "blue"
+  },
+  {
+    id: 2,
+    title: "El pan de cada día, más delicioso.",
+    description: "Suavidad y sabor perfectos para sándwiches, perros y hamburguesas.",
+    buttonText: "Ver productos",
+    buttonLink: "/productos",
+    image: panesImage,
+    bgGradient: "bg-radial-[at_50%_55%] from-orange-200 from-10% to-orange-100 to-60%",
+    theme: "orange"
+  },
+  {
+    id: 3,
+    title: "¡El futuro de la cocina llegó!",
+    description: "Descubre nuestra nueva soya texturizada: proteína versátil y deliciosa.",
+    buttonText: "Ver productos",
+    buttonLink: "/productos",
+    image: soyaImage,
+    bgGradient: "bg-radial-[at_50%_55%] from-green-200 from-10% to-light-green to-60%",
+    theme: "green"
+  }
+];
 ---
 
-<section class="w-full bg-secondary h-[450px] md:h-90 lg:h-[400px] lg:w-auto lg:m-10 lg:mb-0 lg:rounded-4xl">
-   <!-- <Image
-    src={banner}
-    alt="Banner Venepan"
-    class="h-full w-full object-cover object-center rounded-b-4xl"
-    width={1000}
-    height={200}
-    loading="eager"
-    format="webp"
-   /> -->
-</section>
+<div class="swiper banner-swiper w-full">
+  <div class="swiper-wrapper">
+    {banners.map((banner) => {
+      // Obtenemos el set de clases correspondiente al theme del banner
+      const styles = themeStyles[banner.theme];
+      return (
+        <div class="swiper-slide">
+          <section class={`w-full min-w-[300px] px-6 py-10 ${banner.bgGradient} flex flex-col justify-center items-center gap-12 h-[600px] md:flex-row md:justify-between md:h-90 md:p-12 lg:p-28 xl:px-36 lg:h-[400px] lg:w-auto lg:m-10 lg:mb-0 lg:rounded-4xl`}>
+            
+            <div class="flex flex-col items-center text-center md:items-start md:text-start">
+              {/* 2. Aplicar clases desde el objeto de mapeo */}
+              <h1 class={`main-title mb-3 ${styles.text}`}>{banner.title}</h1>
+              <p class={`text-lg/5 font-medium max-w-[40ch] md:text-xl/7 ${styles.text}`}>{banner.description}</p>
+              <a href={banner.buttonLink} class={`btn hidden md:flex md:mt-4 lg:mt-8 ${styles.bg} ${styles.hover}`}>
+                {banner.buttonText}
+              </a>
+            </div>
+  
+            <Image src={banner.image} alt={`Banner de ${banner.title}`} class="w-80 lg:w-[400px] xl:w-[450px]" />
+            
+            <a href={banner.buttonLink} class={`btn md:hidden ${styles.bg} ${styles.hover}`}>
+              {banner.buttonText}
+            </a>
+          </section>
+        </div>
+      );
+    })}
+  </div>
+
+  <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-pagination"></div>
+</div>
+
+<script>
+  import Swiper from 'swiper/bundle';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    new Swiper('.banner-swiper', {
+      loop: true,
+      autoplay: {
+        delay: 4000,
+        disableOnInteraction: false, // El autoplay no se detiene después de la interacción del usuario
+      },
+      speed: 1000, // Velocidad de la transición en ms
+      
+      // Módulos de navegación y paginación
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      
+      // Pausar el autoplay al pasar el mouse por encima (buena práctica de UX)
+      on: {
+        init: function (swiper) {
+          swiper.el.addEventListener('mouseenter', () => {
+            swiper.autoplay.stop();
+          });
+          swiper.el.addEventListener('mouseleave', () => {
+            swiper.autoplay.start();
+          });
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Personaliza el color de las flechas y puntos para que coincida con tu diseño */
+  .banner-swiper .swiper-button-next,
+  .banner-swiper .swiper-button-prev {
+    color: #545454; /* Un azul oscuro, puedes cambiarlo */
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 40px;
+    height: 40px;
+    padding: 12px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .banner-swiper .swiper-button-next {
+    margin-right: 10px;
+  }
+
+  .banner-swiper .swiper-button-prev {
+    margin-left: 10px;
+  }
+  
+  .banner-swiper .swiper-button-next:after,
+  .banner-swiper .swiper-button-prev:after {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .banner-swiper .swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+    background-color: rgba(30, 64, 175, 0.5);
+    opacity: 1;
+  }
+  
+  .banner-swiper .swiper-pagination-bullet-active {
+    background-color: #1e40af;
+  }
+
+  /* Oculta las flechas en pantallas pequeñas para no saturar la interfaz */
+  @media (max-width: 768px) {
+    .banner-swiper .swiper-button-next,
+    .banner-swiper .swiper-button-prev {
+      display: none;
+    }
+  }
+</style>
