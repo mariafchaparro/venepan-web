@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Banner from '../components/DarkBanner.astro';
+import DarkBanner from '../components/DarkBanner.astro';
 import bannerNosotros from "../assets/images/nosotros/banner-nosotros.svg";
 import WhoAreWeSection from '../components/nosotros/WhoAreWeSection.astro';
 import MissionAndVisionSection from '../components/nosotros/MissionAndVisionSection.astro';
@@ -10,7 +10,7 @@ export const prerender = true;
 ---
 
 <Layout title="Nosotros"> 
-    <Banner
+    <DarkBanner
         image={bannerNosotros}
         title="Sobre nosotros"
         subtitle="Comprometidos con una alimentación saludable y de calidad para cada familia."

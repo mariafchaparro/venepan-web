@@ -1,18 +1,22 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
-import Header from '../components/Header.astro';
+import DarkBanner from '../components/DarkBanner.astro';
+import CTASection from "../components/productos/CTASection.astro";
+import PanesSection from "../components/productos/PanesSection.astro";
 
-const products = await getCollection('products');
+import bannerProductos from "../assets/images/productos/banner-productos.svg";
+
 export const prerender = true;
-
 ---
 
 <Layout title="Productos">
-    <Header classicHeader={false}/>
-    <div class="px-6 md:px-12 lg:px-16">
-        <h1 class="main-title">Product Page Venepan</h1>
-        <h2 class="section-title">Titulo de seccion</h2>
-        <p class="text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea quam eaque veritatis sunt maxime ipsa voluptate magni consequatur optio dolores, asperiores illo veniam rem nihil dignissimos iure dicta voluptatem impedit!</p>
-    </div>
+    <DarkBanner 
+        image={bannerProductos}
+        title='Productos Venepan'
+        subtitle='Descubre la variedad de productos que Venepan tiene para tu mesa.'
+        currentPath='/productos'
+    />
+    <PanesSection />
+    <CTASection />
+    
 </Layout>

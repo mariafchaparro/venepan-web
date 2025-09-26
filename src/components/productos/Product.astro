@@ -1,0 +1,28 @@
+---
+import Image from "astro/components/Image.astro"
+
+const {
+    image,
+    name,
+    weight,
+} = Astro.props;
+---
+
+<div class="h-[350px] w-[160px] p-4 flex flex-col items-center gap-4">
+    <div class="h-44">
+        <Image 
+            src={image}
+            alt={`Imagen de ${name}`}
+            class="object-cover w-full h-full"
+        />
+    </div>
+
+    <section class="flex flex-col items-center h-full justify-between">
+        <div class="flex flex-col items-center gap-1">
+            <h3 class="text-gray-800 font-medium text-xl/5 text-center">{name}</h3>
+            <span class="text-gray-600 font-medium text-sm">{`${weight}g`}</span>
+        </div>
+
+        <button class="secondary-btn">Ver detalle</button>
+    </section>
+</div>

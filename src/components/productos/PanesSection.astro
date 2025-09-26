@@ -1,0 +1,50 @@
+---
+import Product from "./Product.astro"
+import panMiel from '../../assets/images/productos/pan-integral-con-miel.webp'
+import panPerro from '../../assets/images/productos/pan-para-perro.webp'
+import { getCollection } from 'astro:content';
+
+const products = await getCollection('products');
+
+---
+<section class="section-padding">
+    <h1 class="section-title mb-12 ml-4">Panes</h1>
+
+    <div class="w-full flex flex-wrap justify-start md:gap-22">
+        <Product
+            image={panPerro}
+            name="Pan Blanco"
+            weight="500"
+        />
+        <Product
+            image={panMiel}
+            name="Pan Integral con Ajonjolí"
+            weight="500"
+        />
+        <Product
+            image={panPerro}
+            name="Pan Integral con Miel"
+            weight="500"
+        />
+        <Product
+            image={panMiel}
+            name="Pan Integral con Miel"
+            weight="500"
+        />
+        <Product
+            image={panPerro}
+            name="Pan Integral con Miel"
+            weight="500"
+        />
+        <Product
+            image={panMiel}
+            name="Pan Integral con Miel"
+            weight="500"
+        />
+        <Product
+            image={panMiel}
+            name="Pan Integral con Miel"
+            weight="500"
+        />
+    </div>
+</section>

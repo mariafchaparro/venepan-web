@@ -30,6 +30,10 @@
     .btn {
         @apply bg-primary min-w-32 inline-flex items-center justify-center font-medium text-white px-5 py-3 rounded-3xl hover:bg-red-800/90 cursor-pointer tracking-wide; 
     }
+    .secondary-btn {
+        @apply bg-light-blue min-w-32 inline-flex items-center justify-center font-medium text-secondary px-5 py-3 rounded-3xl hover:bg-secondary/20 cursor-pointer tracking-wide; 
+
+    }
     .section-padding {
         @apply px-6 py-10 min-w-[300px] sm:p-12 md:p-16 lg:p-20 lg:min-h-[470px];
     }
