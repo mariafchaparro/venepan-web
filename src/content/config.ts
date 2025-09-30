@@ -14,8 +14,8 @@ const reviews = defineCollection({
     schema: z.object({
         name: z.string(),
         date: z.string(),
-        content: z.string(),
-        stars: z.number().min(1).max(5),
+        image: z.string(),
+        content: z.string()
     })
 })
 

@@ -82,8 +82,8 @@ const banners: Banner[] = [
         <div class="swiper-slide">
           <section class={`w-full min-w-[300px] px-6 py-10 ${banner.bgGradient} flex flex-col justify-center items-center gap-12 h-[600px] md:flex-row md:justify-between md:h-90 md:p-12 lg:p-28 xl:px-36 lg:h-[400px] lg:w-auto lg:m-10 lg:mb-0 lg:rounded-4xl`}>
             
-            <div class="flex flex-col items-center text-center md:items-start md:text-start">
-              {/* 2. Aplicar clases desde el objeto de mapeo */}
+            <div class="min-w-[324px] flex flex-col items-center text-center md:items-start md:text-start">
+              {/* Aplicar clases desde el objeto de mapeo */}
               <h1 class={`main-title mb-3 ${styles.text}`}>{banner.title}</h1>
               <p class={`text-lg/5 font-medium max-w-[40ch] md:text-xl/7 ${styles.text}`}>{banner.description}</p>
               <a href={banner.buttonLink} class={`btn hidden md:flex md:mt-4 lg:mt-8 ${styles.bg} ${styles.hover}`}>
@@ -91,7 +91,7 @@ const banners: Banner[] = [
               </a>
             </div>
   
-            <Image src={banner.image} alt={`Banner de ${banner.title}`} class="w-80 lg:w-[400px] xl:w-[450px]" />
+            <Image src={banner.image} alt={`Banner de ${banner.title}`} class="min-w-80 lg:w-[400px] xl:w-[450px]" loading={'eager'}  />
             
             <a href={banner.buttonLink} class={`btn md:hidden ${styles.bg} ${styles.hover}`}>
               {banner.buttonText}
@@ -102,8 +102,6 @@ const banners: Banner[] = [
     })}
   </div>
 
-  <div class="swiper-button-next"></div>
-  <div class="swiper-button-prev"></div>
   <div class="swiper-pagination"></div>
 </div>
 
@@ -114,16 +112,11 @@ const banners: Banner[] = [
     new Swiper('.banner-swiper', {
       loop: true,
       autoplay: {
-        delay: 4000,
+        delay: 2500,
         disableOnInteraction: false, // El autoplay no se detiene después de la interacción del usuario
       },
       speed: 1000, // Velocidad de la transición en ms
       
-      // Módulos de navegación y paginación
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
       pagination: {
         el: '.swiper-pagination',
         clickable: true,
@@ -143,51 +136,3 @@ const banners: Banner[] = [
     });
   });
 </script>
-
-<style>
-  /* Personaliza el color de las flechas y puntos para que coincida con tu diseño */
-  .banner-swiper .swiper-button-next,
-  .banner-swiper .swiper-button-prev {
-    color: #545454; /* Un azul oscuro, puedes cambiarlo */
-    font-weight: bold;
-    background-color: rgba(255, 255, 255, 0.8);
-    width: 40px;
-    height: 40px;
-    padding: 12px;
-    border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  .banner-swiper .swiper-button-next {
-    margin-right: 10px;
-  }
-
-  .banner-swiper .swiper-button-prev {
-    margin-left: 10px;
-  }
-  
-  .banner-swiper .swiper-button-next:after,
-  .banner-swiper .swiper-button-prev:after {
-    font-size: 20px;
-    font-weight: bold;
-  }
-
-  .banner-swiper .swiper-pagination-bullet {
-    width: 12px;
-    height: 12px;
-    background-color: rgba(30, 64, 175, 0.5);
-    opacity: 1;
-  }
-  
-  .banner-swiper .swiper-pagination-bullet-active {
-    background-color: #1e40af;
-  }
-
-  /* Oculta las flechas en pantallas pequeñas para no saturar la interfaz */
-  @media (max-width: 768px) {
-    .banner-swiper .swiper-button-next,
-    .banner-swiper .swiper-button-prev {
-      display: none;
-    }
-  }
-</style>

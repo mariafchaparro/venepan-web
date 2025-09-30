@@ -1,0 +1,97 @@
+---
+import Product from "./Product.astro"
+import panMiel from '../../assets/images/productos/pan-integral-con-miel.webp'
+import panPerro from '../../assets/images/productos/pan-para-perro.webp'
+import panHamburguesa from '../../assets/images/productos/pan-para-hamburguesa.webp'
+import panAjonloli from '../../assets/images/productos/pan-integral-con-ajonjoli.webp'
+import panIntegral from '../../assets/images/productos/pan-integral.webp'
+import panBlanco from '../../assets/images/productos/pan-blanco.webp'
+import tostadas from '../../assets/images/productos/tostadas-integrales.webp'
+import aritosFrutados from '../../assets/images/productos/aritos-frutados.webp'
+import chokoBolitos from '../../assets/images/productos/choko-bolitos.webp'
+import chokoCrispy from '../../assets/images/productos/choko-crispy.webp'
+import aritosMiel from '../../assets/images/productos/aritos-con-miel.webp'
+import soya from '../../assets/images/productos/soya-texturizada.webp'
+
+import { getCollection } from 'astro:content';
+
+const products = await getCollection('products');
+
+---
+<section class="section-padding">
+    <h1 class="section-title ml-4 mt-8" id="Cereales">Cereales</h1>
+
+    <div class="w-full flex flex-wrap justify-between sm:justify-start md:gap-20">
+        <Product
+            image={aritosFrutados}
+            name="Aritos Frutados"
+            weight="240"
+        />
+        <Product
+            image={chokoBolitos}
+            name="Choko Bolitos"
+            weight="240"
+        />
+        <Product
+            image={chokoCrispy}
+            name="Choko Crispy"
+            weight="300"
+        />
+        <Product
+            image={aritosMiel}
+            name="Aritos con Miel"
+            weight="240"
+        />
+    </div>
+    
+    <h1 class="section-title ml-4" id="Panes">Panes</h1>
+
+    <div class="w-full flex flex-wrap justify-between sm:justify-start md:gap-22">
+        <Product
+            image={panBlanco}
+            name="Pan Blanco"
+            weight="500"
+        />
+        <Product
+            image={panAjonloli}
+            name="Pan Integral con Ajonjolí"
+            weight="500"
+        />
+        <Product
+            image={panIntegral}
+            name="Pan Integral"
+            weight="700"
+        />
+        <Product
+            image={panMiel}
+            name="Pan Integral con Miel"
+            weight="500"
+        />
+        <Product
+            image={panPerro}
+            name="Pan para Perro Caliente"
+            weight="500"
+        />
+        <Product
+            image={panHamburguesa}
+            name="Pan para Hamburguesa"
+            weight="500"
+        />
+        <Product
+            image={tostadas}
+            name="Tostadas Integrales"
+            weight="220"
+        />
+    </div>
+
+    <h1 class="section-title ml-4 mt-8" id="Soya">Soya</h1>
+
+    <div class="w-full flex flex-wrap justify-between sm:justify-start md:gap-22">
+        <Product
+            image={soya}
+            name="Proteína de Soya Texturizada"
+            weight="200"
+        />
+    </div>
+
+</section>

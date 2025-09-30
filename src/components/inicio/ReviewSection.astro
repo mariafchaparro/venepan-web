@@ -1,40 +1,168 @@
 ---
 import { getCollection } from 'astro:content';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const reviews = await getCollection('reviews');
 ---
 
-<section class="reviews-background section-padding flex flex-col items-center justify-center lg:mx-12 lg:rounded-4xl lg:min-h-0">
-    
-    <h2 class="section-title text-center mb-10 md:mb-12">¿Qué dicen nuestros clientes?</h2>
-    
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
+<section class="section-padding flex flex-col items-center gap-6 md:gap-12">
+  <h2 class="section-title text-center">¿Qué dicen nuestros clientes?</h2>
+  
+  <!-- Desktop Layout - Estático -->
+  <div class="hidden md:flex justify-center items-center gap-8 w-full max-w-6xl"
+    data-aos="fade-right"
+    data-aos-offset="200"
+  >
+    {reviews.map((review, index) => (
+      <div class={`review-card ${index === 1 ? 'center-review' : 'side-review'}`}>
+        <div class="flex flex-col items-center text-center">
+          <div class="review-avatar rounded-full overflow-hidden mb-4">
+            <img
+              src={review.data.image}
+              alt={review.data.name}
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          <h3 class="review-name text-gray-800 font-semibold mb-2">{review.data.name}</h3>
+          <p class="review-text text-gray-600">
+            {review.data.content}
+          </p>
+        </div>
+      </div>
+    ))}
+  </div>
 
-        {
-        reviews.map((review) => (
-            <article class="flex flex-col justify-between min-w-[275px] max-w-[290px] md:max-w-[434px] p-5 bg-white rounded-3xl card-shadow"
-                data-aos="fade-right"
-                data-aos-offset="200">
-           
-            <div>
-                <div class="w-fill flex justify-between items-center mb-1">
-                    <h3 class="text-gray-800 text font-medium m-0 md:text-lg">{review.data.name}</h3>
-                    <h4 class="light-text text-[12px] mb-0 font-medium md:text-sm">{review.data.date}</h4>
-                </div>
-                <p class="w-full text-gray-800 text-sm mb-0 mt-4 md:text-base">
-                    {review.data.content}
-                </p>
+  <!-- Mobile Layout - Swiper -->
+  <div class="block md:hidden w-full">
+    <div class="swiper mobile-swiper">    
+      <div class="swiper-wrapper">
+        {reviews.map((review) => (
+          <div class="swiper-slide">
+            <div class="flex flex-col items-center text-center p-6">
+              <div class="w-40 h-40 rounded-full overflow-hidden mb-4">
+                <img
+                  src={review.data.image}
+                  alt={review.data.name}
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <h3 class="text-gray-800 font-semibold text-lg">{review.data.name}</h3>
+              <p class="text-gray-600 max-w-xs mt-2 mb-6">
+                {review.data.content}
+              </p>
             </div>
-
-            <div class="w-full text-right mt-2 lg:mt-6">
-                {
-                    Array.from({ length: review.data.stars }).map(() => (
-                        <img src="/icons/star.svg" alt="Estrella" class="inline w-4 h-4 ml-1 md:w-5 md:h-5"/>
-                    ))
-                }
-            </div>
-        </article>
-        ))
-    }
+          </div>
+        ))}
+      </div>
+    
+      <!-- Pagination for mobile -->
+      <div class="swiper-pagination mobile-pagination"></div>
     </div>
+  </div>
+
+  <div class="text-center">
+    <a href="/contacto" class="btn">Contáctanos</a>
+  </div>
 </section>
+
+<script>
+  import { Swiper } from 'swiper';
+  import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Solo Mobile Swiper Configuration
+    const mobileSwiper = new Swiper(".mobile-swiper", {
+      modules: [Navigation, Pagination, Autoplay],
+      speed: 1000,
+      slidesPerView: 1,
+      spaceBetween: 20,
+      centeredSlides: true,
+      autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+      },
+      
+      pagination: {
+        el: ".mobile-pagination",
+        clickable: true,
+        renderBullet: function (index: number, className: string) {
+          return `<span class="${className}"></span>`;
+        },
+      },
+      
+      loop: true,
+      
+      on: {
+        init: function (swiper) {
+          // Pause on hover for mobile
+          swiper.el.addEventListener('mouseenter', () => {
+            swiper.autoplay.stop();
+          });
+          swiper.el.addEventListener('mouseleave', () => {
+            swiper.autoplay.start();
+          });
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Desktop Static Reviews */
+  .review-card {
+    transition: all 0.3s ease;
+    padding: 1.5rem;
+  }
+
+  /* Center Review - Destacado */
+  .center-review {
+    transform: scale(1.1);
+    z-index: 2;
+  }
+  
+  .center-review .review-avatar {
+    width: 140px;
+    height: 140px;
+  }
+
+  .center-review .review-name {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .center-review .review-text {
+    font-size: 16px;
+    line-height: 20px;
+    max-width: 320px;
+  }
+
+  /* Side Reviews - Más pequeños */
+  .side-review {
+    transform: scale(0.95);
+  }
+
+  .side-review .review-avatar {
+    width: 125px;
+    height: 125px;
+  }
+
+  .side-review .review-name {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .side-review .review-text {
+    font-size: 16px;
+    line-height: 20px;
+    max-width: 280px;
+  }
+
+  /* Hover effect for side reviews */
+  .side-review:hover {
+    transform: scale(1);
+  }
+</style>
