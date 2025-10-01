@@ -1,3 +1,7 @@
+---
+import Image from "astro/components/Image.astro"
+import aboutPic from "../../assets/images/inicio/about-pic.svg"
+---
 <section class="flex flex-col md:flex-row-reverse">
     <div class="bg-secondary w-full section-padding flex flex-col justify-center items-center md:items-start md:w-1/2">
         <div>
@@ -17,6 +21,11 @@
             <img src="/icons/chevron-left.svg" alt="" class="rotate-180">
         </div>
 
-        <img src="src/assets/images/inicio/about-pic.svg" alt="" class="object-cover w-full h-full md:h-[470px]" loading="lazy" />
+        <Image 
+        src={aboutPic}
+        alt="Imagen sobre nosotros"
+        class="object-cover w-full h-full md:h-[470px]"
+        loading="lazy"
+        />
     </div>
 </section>
