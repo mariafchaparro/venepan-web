@@ -1,4 +1,4 @@
-import { s as supabase } from './AuthLayout_BfQniUbi.mjs';
+import { s as supabase } from './AuthLayout_B6lVrRwX.mjs';
 
 async function signIn(email, password) {
   const {

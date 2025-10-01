@@ -1,8 +1,8 @@
 import { c as createComponent, r as renderComponent, b as renderTemplate } from '../chunks/astro/server_zyXMpcS0.mjs';
 import 'kleur/colors';
-import { $ as $$AuthLayout } from '../chunks/AuthLayout_BfQniUbi.mjs';
+import { $ as $$AuthLayout } from '../chunks/AuthLayout_B6lVrRwX.mjs';
 import { useState } from 'preact/hooks';
-import { a as signIn, b as signInWithGoogle } from '../chunks/auth_FemzuJrJ.mjs';
+import { a as signIn, b as signInWithGoogle } from '../chunks/auth_CHXtb9N8.mjs';
 import { jsxs, jsx } from 'preact/jsx-runtime';
 export { renderers } from '../renderers.mjs';
 

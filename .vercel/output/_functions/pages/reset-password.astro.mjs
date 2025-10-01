@@ -1,6 +1,6 @@
 import { c as createComponent, r as renderComponent, b as renderTemplate } from '../chunks/astro/server_zyXMpcS0.mjs';
 import 'kleur/colors';
-import { s as supabase, $ as $$AuthLayout } from '../chunks/AuthLayout_BfQniUbi.mjs';
+import { s as supabase, $ as $$AuthLayout } from '../chunks/AuthLayout_B6lVrRwX.mjs';
 import { useState, useEffect } from 'preact/hooks';
 import { jsxs, jsx } from 'preact/jsx-runtime';
 export { renderers } from '../renderers.mjs';

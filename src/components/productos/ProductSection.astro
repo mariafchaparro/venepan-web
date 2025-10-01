@@ -18,10 +18,10 @@ import { getCollection } from 'astro:content';
 const products = await getCollection('products');
 
 ---
-<section class="section-padding">
-    <h1 class="section-title ml-4 mt-8" id="Cereales">Cereales</h1>
+<section class="section-padding xl:p-20">
+    <h1 class="section-title ml-4" id="Cereales">Cereales</h1>
 
-    <div class="w-full flex flex-wrap justify-between sm:justify-start md:gap-20">
+    <div class="w-full flex flex-wrap justify-between sm:justify-start md:gap-20 mb-10">
         <Product
             image={aritosFrutados}
             name="Aritos Frutados"

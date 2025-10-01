@@ -4,6 +4,7 @@ import preact from '@astrojs/preact';
 import vercel from '@astrojs/vercel';
 
 export default defineConfig({
+  output: 'static',
   vite: {
     plugins: [tailwindcss()],
   },
