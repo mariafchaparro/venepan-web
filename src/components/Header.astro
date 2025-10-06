@@ -58,7 +58,7 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
     <div class="hidden md:flex gap-2 items-center">
         <a href="/login" class:list={["text-sm font-semibold", classicHeader? "text-primary" : "text-white"]}>Login</a>
         <hr class:list={["rotate-90 w-3 h-0.5", classicHeader? "text-gray-700" : "text-white"]}/>
-        <button class="btn text-sm hidden md:flex">Contáctanos</button>
+        <a href="/contacto" class="btn text-sm hidden md:flex">Contáctanos</a>
     </div>
     
     <button 
@@ -79,7 +79,7 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
 
     <div 
         data-menu-content
-        class="bg-white border-r-1 border-gray-200 py-4 px-6 flex flex-col fixed top-0 left-0 w-5/6 min-w-60 max-w-sm h-screen z-50 transition-transform duration-300 ease-in-out transform -translate-x-full" >
+        class="bg-white max-h-dvh border-r-1 border-gray-200 py-4 px-6 flex flex-col fixed top-0 left-0 w-5/6 min-w-60 max-w-sm h-screen z-50 transition-transform duration-300 ease-in-out transform -translate-x-full" >
         <div class="flex items-center justify-between w-full mb-14">
             <a href="/" class="w-16">
                 <img src="/icons/logo.svg" alt="Venepan Logo"/>
@@ -116,7 +116,7 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
             </ul>
     
             <div class="w-full flex flex-col gap-4 mt-8">
-                <button class="btn text-sm w-fill">Contáctanos</button>
+                <a href="/contacto" class="btn text-sm w-fill">Contáctanos</a>
                 <a href="/login" class="text-primary text-sm font-semibold self-center">Login</a>
                 <p class="text-sm text-gray-500 self-center">Copyright © Alimentos Venepan</p>
             </div>

@@ -92,7 +92,7 @@ export default function LoginForm() {
           </div>
 
           <div className="flex justify-between items-center">
-            <label htmlFor="show-password" className="text-gray-800 text-sm flex items-center gap-1">
+            <label htmlFor="show-password" className="text-gray-600 text-sm flex items-center gap-1">
               <input
                 id="show-password"
                 type="checkbox"

@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import TextSection from '../components/contacto/TextSection.astro'
+import InfoSection from '../components/contacto/InfoSection.astro'
+import ContactForm from '../components/contacto/ContactForm.astro'
+
+export const prerender = false;
+---
+
+<Layout title="Inicio">
+    <Header classicHeader={true} currentPath={'/contacto'}/> 
+    <main class="section-padding flex flex-col md:gap-12 md:flex-row md:justify-between xl:px-36">
+        <div class="md:w-1/2">
+            <TextSection />
+            <InfoSection />
+        </div>
+        <ContactForm />
+
+    </main>
+</Layout>
