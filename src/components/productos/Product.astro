@@ -4,7 +4,7 @@ import Image from "astro/components/Image.astro"
 const {
     image,
     name,
-    weight,
+    weight ,
 } = Astro.props;
 ---
 
@@ -14,6 +14,7 @@ const {
             src={image}
             alt={`Imagen de ${name}`}
             class="object-cover w-full h-full"
+            inferSize = {true}
         />
     </div>
 
