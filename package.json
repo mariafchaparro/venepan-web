@@ -9,12 +9,13 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.14.1",
+    "@astrojs/node": "^9.4.4",
     "@astrojs/preact": "^4.1.1",
     "@astrojs/vercel": "^8.2.8",
     "@supabase/supabase-js": "^2.57.4",
     "@tailwindcss/vite": "^4.1.11",
     "aos": "^2.3.4",
+    "astro": "^5.14.1",
     "preact": "^10.27.1",
     "swiper": "^12.0.1",
     "tailwindcss": "^4.1.11"
