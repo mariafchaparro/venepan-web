@@ -1,19 +1,51 @@
 ---
 import Product from "./Product.astro"
 import { actions } from 'astro:actions';
+import type { Product as ProductType } from '../../actions/products';
 
-// Llamar a la action para obtener los productos
-const result = await Astro.callAction(actions.products.getProducts, {}); 
-const products = result.data || [];
+let products: ProductType[] = [];
+
+let hasError = false;
+let errorMessage = '';
+
+const { data, error } = await Astro.callAction(actions.products.getProducts, {});
+
+if (error) {
+  hasError = true;
+  
+  // Manejar según el código de error
+  switch (error.code) {
+    case 'BAD_REQUEST':
+      errorMessage = 'Error al conectar con la base de datos. Por favor, recarga la página.';
+      break;
+    case 'NOT_FOUND':
+      errorMessage = 'No hay productos disponibles en este momento.';
+      break;
+    case 'INTERNAL_SERVER_ERROR':
+      errorMessage = 'Ocurrió un error en el servidor. Por favor, intenta más tarde.';
+      break;
+    default:
+      errorMessage = 'Ocurrió un error inesperado.';
+  }
+  console.error('Error de Action:', error.message);
+} else {
+  // Si no hay error, asignar los datos
+  products = data || [];
+}
 
 // Filtrar productos por categoría
-const cereales = products.filter(product => product.id_categoria === '922fb70d-3a54-48e5-91cf-effb9ab3d3cb');
-const panes = products.filter(product => product.id_categoria === '23351604-a1b5-452b-8d7a-1e8db7395da1');
-const soya = products.filter(product => product.id_categoria === 'cd369df6-7f77-408d-b84d-6abbdb60e781')
-
-
+const cereales = hasError ? [] : products.filter(product => product.id_categoria === '922fb70d-3a54-48e5-91cf-effb9ab3d3cb');
+const panes = hasError ? [] : products.filter(product => product.id_categoria === '23351604-a1b5-452b-8d7a-1e8db7395da1');
+const soya = hasError ? [] : products.filter(product => product.id_categoria === 'cd369df6-7f77-408d-b84d-6abbdb60e781');
 ---
+
 <section class="section-padding xl:p-20">
+    {hasError && (
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <p>{errorMessage}</p>
+        </div>
+    )}
+
     <h1 class="section-title ml-4" id="Cereales">Cereales</h1>
 
     <div class="w-full flex flex-wrap justify-between sm:justify-start md:gap-20 mb-10">

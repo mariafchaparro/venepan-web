@@ -2,7 +2,7 @@ import { defineAction, ActionError } from "astro:actions";
 import { z } from "astro:schema";
 import { supabase } from "../lib/supabase"; 
 
-type Product = {
+export type Product = {
   id_producto: string;
   nombre_producto: string;
   peso_producto: number;
@@ -97,7 +97,7 @@ export const products = {
             });
           }
           
-          return data;
+          return data as Product;
           
         } catch (error) {
           if (error instanceof ActionError) {
