@@ -1,7 +1,7 @@
 import { supabase } from '../lib/supabase';
 
 // Escuchar cambios en el estado de autenticación
-supabase.auth.onAuthStateChange((event, session) => {
+supabase.auth.onAuthStateChange((session) => {
   if (session) {
     // Guardar tokens en cookies
     document.cookie = `sb-access-token=${session.access_token}; path=/; max-age=${session.expires_in}; SameSite=Lax; secure`;

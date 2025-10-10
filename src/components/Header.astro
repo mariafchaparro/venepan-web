@@ -5,7 +5,7 @@ interface Props {
   currentPath?: string;
 }
 
-const { classicHeader = false, class: extraClass, currentPath } = Astro.props;
+const { classicHeader = false, currentPath } = Astro.props;
 const menuIcon = classicHeader ? "/icons/menu.svg" : "/icons/menu-white.svg"
 
 const navLinks = [
