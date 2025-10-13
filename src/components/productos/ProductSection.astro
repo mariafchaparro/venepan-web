@@ -1,5 +1,6 @@
 ---
 import Product from "./Product.astro"
+import ProductsContainer from "./ProductsContainer";
 import { actions } from 'astro:actions';
 import type { Product as ProductType } from '../../actions/products';
 
@@ -55,6 +56,7 @@ const soya = hasError ? [] : products.filter(product => product.id_categoria ===
                     image={cereal.imagen_producto}
                     name={cereal.nombre_producto}
                     weight={cereal.peso_producto}
+                    productId={cereal.id_producto}
                 />
             ))
         }
@@ -69,6 +71,7 @@ const soya = hasError ? [] : products.filter(product => product.id_categoria ===
                     image={pan.imagen_producto}
                     name={pan.nombre_producto}
                     weight={pan.peso_producto}
+                    productId={pan.id_producto}
                 />
             ))
         }
@@ -83,8 +86,12 @@ const soya = hasError ? [] : products.filter(product => product.id_categoria ===
                     image={soya.imagen_producto}
                     name={soya.nombre_producto}
                     weight={soya.peso_producto}
+                    productId={soya.id_producto}
                 />
             ))
         }
     </div> 
+
+    <!-- Contenedor del Modal con Preact (client:load para interactividad) -->
+    <ProductsContainer client:load products={products} />
 </section>

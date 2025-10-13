@@ -4,7 +4,8 @@ import Image from "astro/components/Image.astro"
 const {
     image,
     name,
-    weight ,
+    weight,
+    productId,
 } = Astro.props;
 ---
 
@@ -24,6 +25,6 @@ const {
             <span class="text-gray-600 font-medium text-sm">{`${weight}g`}</span>
         </div>
 
-        <button class="secondary-btn">Ver detalle</button>
+        <button data-product-id={productId} class="secondary-btn">Ver detalle</button>
     </section>
 </div>
