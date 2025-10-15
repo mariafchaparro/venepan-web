@@ -2,6 +2,11 @@ import { defineAction, ActionError } from "astro:actions";
 import { z } from "astro:schema";
 import { supabase } from "../lib/supabase"; 
 
+export type Benefit = {
+  id_beneficios: string;
+  descripcion_beneficio: string;
+};
+
 export type Product = {
   id_producto: string;
   nombre_producto: string;
@@ -9,6 +14,7 @@ export type Product = {
   descripcion_producto: string
   imagen_producto: string;
   id_categoria: string;
+  sgp_m_beneficios: Benefit[];
 };
 
 export const products = {
@@ -23,7 +29,7 @@ export const products = {
         // Construir query base
         let query = supabase
           .from('sgp_m_productos')
-          .select('*');
+          .select('*, sgp_m_beneficios(*)');
         
         // Aplicar filtro de categoría si se proporciona
         if (input?.category) {
@@ -51,6 +57,7 @@ export const products = {
         }
         
         // Retornar los datos exitosamente
+        
         return data as Product[];
         
       } catch (error) {
