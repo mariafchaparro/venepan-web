@@ -1,15 +1,5 @@
 import { defineCollection, z } from "astro:content";
 
-const products = defineCollection({
-    schema: z.object({
-        name: z.string(),
-        weight: z.string(),
-        image: z.string(),
-        benefits: z.array(z.string()),
-        description: z.string(),
-    })
-})
-
 const reviews = defineCollection({
     schema: z.object({
         name: z.string(),
@@ -19,4 +9,16 @@ const reviews = defineCollection({
     })
 })
 
-export const collections = { products, reviews };
+const recipes = defineCollection({
+    schema: z.object({
+        name: z.string(),
+        image: z.string(),
+        preparationTime: z.number().int(),
+        servings: z.number().int(),
+        stars: z.number().int(),
+        ingredients: z.array(z.string()),
+        steps: z.array(z.string())
+    })
+})
+
+export const collections = { reviews, recipes };

@@ -1,0 +1,25 @@
+---
+import { getCollection } from "astro:content";
+import Recipe from "./Recipe.astro";
+
+const recipes = await getCollection('recipes');
+---
+
+<section class="section-padding">
+    <h1 class="section-title mb-36 text-center">¡Tus recetas favoritas con los mejores ingredientes!</h1>
+
+    <div class="flex flex-col justify-center items-center gap-32 md:flex-row md:flex-wrap md:gap-20">
+        {
+            recipes.map(recipe => (
+                <Recipe
+                    name={recipe.data.name}
+                    image={recipe.data.image}
+                    preparationTime={recipe.data.preparationTime}
+                    servings={recipe.data.servings}
+                    stars={recipe.data.stars}
+                    slug={recipe.slug}
+                />
+            ))
+        }
+    </div>
+</section>

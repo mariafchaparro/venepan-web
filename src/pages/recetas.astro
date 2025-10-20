@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DarkBanner from '../components/DarkBanner.astro';
+import bannerRecetas from "../assets/images/recetas/banner-recetas.svg";
+import RecipesSection from "../components/recetas/RecipesSection.astro"
+
+export const prerender = true;
+---
+
+<Layout title="Recetas"> 
+    <DarkBanner
+        image={bannerRecetas}
+        title="Recetas"
+        subtitle="Descubre la variedad de recetas que puedes realizar con productos Venepan."
+        currentPath="/recetas"
+    />
+    <main>
+        <RecipesSection />
+    </main>
+    
+</Layout>

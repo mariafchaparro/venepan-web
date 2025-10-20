@@ -1,0 +1,101 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import DarkBanner from "../../components/DarkBanner.astro";
+import bannerRecetas from "../../assets/images/recetas/banner-recetas.svg";
+
+export const prerender = true;
+
+// Le dice a Astro qué páginas generar
+export async function getStaticPaths() {
+  const recipes = await getCollection("recipes");
+
+  return recipes.map(recipe => ({
+    params: { slug: recipe.slug }, // La URL (ej: /recetas/tacos-de-soya)
+    props: { recipe }, // Los datos que se pasan al componente
+  }));
+}
+
+// Obtenemos los datos de la receta específica para esta página
+const { recipe } = Astro.props;
+const { data } = recipe;
+const { name, image, preparationTime, servings, stars, ingredients, steps } = data;
+
+---
+<Layout title=`Recetas - ${name}`> 
+  <DarkBanner
+    image={bannerRecetas}
+    title="Recetas"
+    subtitle="Descubre la variedad de recetas que puedes realizar con productos Venepan."
+    currentPath="/recetas"
+  />
+
+  <section class="relative section-padding flex flex-col items-center">
+    <div class="absolute top-8 left-6 flex items-center md:top-10 md:left-24">
+      <img src="/icons/chevron-left.svg" alt="Flecha atrás" class="w-4" />
+      <a href="/recetas" class="text-gray-600 text-sm hover:underline">
+        Volver
+      </a>
+    </div>
+    
+    <h1 class="section-title mt-12 mb-2 md:mb-4 md:mt-0">{name}</h1>
+    
+    <div class="flex justify-center items-center gap-3 flex-wrap mb-8 md:mb-12 md:gap-6">
+      <div class="flex gap-1">
+        <img src="/icons/clock-icon.svg" alt="Icono Mintos de Prepraración">
+        <span class="text-gray-600 font-medium">{preparationTime} min</span>
+      </div>
+
+      <div class="flex gap-1">
+        <img src="/icons/servings-icon.svg" alt="Icono Porciones">
+        <span class="text-gray-600 font-medium">{servings} porciones</span>
+      </div>
+      
+      <div class="flex gap-0.5">
+        {Array.from({ length: stars }).map(() => (
+          <img src="/icons/star.svg" alt="Estrella" class="w-4" />
+        ))}
+        <span class="text-gray-600 text-sm font-medium">(10 reviews)</span>
+      </div>
+    </div>
+    
+
+    <div class="w-full h-96 overflow-hidden mb-12 md:mb-20">
+      <img src={image} alt={`Foto de ${name}`} class="w-full h-full object-cover" />
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-2">
+      
+      <aside class="md:col-span-1 px-6 rounded-lg">
+        <h2 class="text-2xl text-gray-800 font-semibold mb-4 pb-2">INGREDIENTES</h2>
+        
+        <ul class="space-y-2 text-gray-800">
+          {ingredients.map(ingredient => (
+            <li class="py-2 border-b border-light-gray">
+              {
+                ingredient.includes('Venepan') ? (
+                // Si el ingrediente incluye "Venepan", lo muestra en negrita y con un color primario
+                <strong class="text-primary font-semibold">{ingredient}</strong>
+              ) : (
+                // Si no, lo muestra como texto normal
+                ingredient
+              )
+              }
+            </li>
+          ))}
+          
+        </ul>
+      </aside>
+
+      <section class="md:col-span-2 px-6">
+        <h2 class="text-2xl text-gray-800 font-semibold mb-4 pb-2">PREPARACIÓN</h2>
+        <ol class="list-decimal list-inside space-y-4 text-gray-800 leading-relaxed">
+            {steps.map(step => (
+                <li>{step}</li>
+            ))}
+        </ol>
+      </section>
+    </div>
+
+  </section>
+</Layout>

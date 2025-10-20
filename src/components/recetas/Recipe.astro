@@ -1,0 +1,37 @@
+---
+const {
+    name,
+    image,
+    preparationTime,
+    stars,
+    slug
+} = Astro.props;
+---
+
+<div class="bg-white rounded-3xl border border-light-gray relative w-56 h-60 flex flex-col justify-end items-center card-shadow">
+    <div class="w-40 h-40 absolute overflow-hidden rounded-full bottom-40 shadow-md border border-light-gray">
+        <img 
+        src={image}
+        alt=`Foto de ${name}`
+        class="w-full h-full object-cover"
+        />
+    </div>
+
+   
+    <h3 class="text-gray-800 text-lg font-medium">{name}</h3>
+    <div class="flex gap-2 items-center mb-6">
+        <div class="flex gap-0.5">
+            {
+                Array.from({length: stars}).map(() => (
+                    <img src="/icons/star.svg" alt="Estrella" class="w-3" />
+                ))
+            }
+        </div>
+        <span class="text-gray-500 text-sm font-medium">(10 reviews)</span>
+    </div>
+
+    <div class="flex justify-between border-t-2 border-t-light-gray w-full py-3 px-5 items-center">
+        <p class="text-gray-500 font-medium">{preparationTime} min</p>
+        <a href={`/recetas/${slug}`} class="secondary-btn recipe-btn">Ver receta</a>
+    </div>
+</div>
