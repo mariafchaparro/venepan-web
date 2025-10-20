@@ -34,6 +34,9 @@
         @apply bg-light-blue min-w-32 inline-flex items-center justify-center font-medium text-secondary px-5 py-3 rounded-3xl hover:bg-secondary/20 cursor-pointer transition-all hover:scale-95 active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed; 
 
     }
+    .recipe-btn {
+        @apply min-w-0 px-5 text-sm
+    }
     .section-padding {
         @apply px-6 py-10 min-w-[300px] sm:p-12 md:p-16 lg:p-20 lg:px-28 xl:p-28 lg:min-h-[470px];
     }
