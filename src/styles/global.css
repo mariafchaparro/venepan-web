@@ -10,22 +10,24 @@
 
     --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+    --breakpoint-2xl: 110rem;
 }
 
 @layer components {
     .main-title {
-        @apply font-bold text-4xl text-gray-800 mb-2 md:text-4xl lg:text-5xl;
+        @apply font-bold text-4xl text-gray-800 mb-2 md:text-4xl lg:text-5xl 2xl:text-[60px];
 
     }
     .section-title {
-        @apply font-semibold text-3xl text-gray-800 mb-6 mt-4 md:mt-0 md:text-4xl xl:text-[40px];
+        @apply font-semibold text-3xl text-gray-800 mb-6 mt-4 md:mt-0 md:text-4xl xl:text-[40px] 2xl:text-[50px];
 
     }
     .text {
-        @apply text-gray-800 mb-6 md:text-lg;
+        @apply text-gray-800 mb-6 md:text-lg 2xl:text-2xl;
     }
     .light-text {
-        @apply text-gray-600 mb-6 md:text-lg;
+        @apply text-gray-600 mb-6 md:text-lg 2xl:text-2xl;
     }
     .btn {
         @apply bg-primary min-w-32 inline-flex items-center justify-center font-medium text-white px-5 py-3 rounded-3xl hover:bg-red-700/90 cursor-pointer transition-all hover:scale-95 active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed; 
@@ -38,7 +40,7 @@
         @apply min-w-0 px-5 text-sm
     }
     .section-padding {
-        @apply px-6 py-10 min-w-[300px] sm:p-12 md:p-16 lg:p-20 lg:px-28 xl:p-28 lg:min-h-[470px];
+        @apply px-6 py-10 min-w-[300px] sm:p-12 md:p-16 lg:p-20 lg:px-28 xl:p-28 lg:min-h-[470px] 2xl:px-56 2xl:py-36;
     }
     .card-shadow { 
         box-shadow: 0 4px 4px 0 rgba(151, 151, 151, 0.25);

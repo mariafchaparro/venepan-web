@@ -73,14 +73,14 @@ const banners: Banner[] = [
 ];
 ---
 
-<div class="swiper banner-swiper w-full">
+<div class="swiper banner-swiper w-full ">
   <div class="swiper-wrapper">
     {banners.map((banner) => {
       // Obtenemos el set de clases correspondiente al theme del banner
       const styles = themeStyles[banner.theme];
       return (
         <div class="swiper-slide">
-          <section class={`w-full min-w-[300px] px-6 py-10 ${banner.bgGradient} flex flex-col justify-center items-center gap-12 h-[600px] md:flex-row md:justify-between md:h-90 md:p-12 lg:p-28 xl:px-36 lg:h-[430px] lg:w-auto lg:m-10 lg:mb-0 lg:rounded-4xl`}>
+          <section class={`w-full min-w-[300px] px-6 py-10 ${banner.bgGradient} flex flex-col justify-center items-center gap-12 h-[600px] md:flex-row md:justify-between md:h-90 md:p-12 lg:p-28 xl:px-36 lg:h-[430px] lg:w-auto lg:m-10 lg:mb-0 lg:rounded-4xl 2xl:h-[540px] 2xl:mx-56`}>
             
             <div class="min-w-[324px] flex flex-col items-center text-center md:items-start md:text-start">
               {/* Aplicar clases desde el objeto de mapeo */}
@@ -112,7 +112,7 @@ const banners: Banner[] = [
     new Swiper('.banner-swiper', {
       loop: true,
       autoplay: {
-        delay: 2500,
+        delay: 2000,
         disableOnInteraction: false, // El autoplay no se detiene después de la interacción del usuario
       },
       speed: 1000, // Velocidad de la transición en ms

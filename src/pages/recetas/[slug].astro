@@ -64,14 +64,14 @@ const { name, image, preparationTime, servings, stars, ingredients, steps } = da
       <img src={image} alt={`Foto de ${name}`} class="w-full h-full object-cover" />
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-2">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
       
       <aside class="md:col-span-1 px-6 rounded-lg">
         <h2 class="text-2xl text-gray-800 font-semibold mb-4 pb-2">INGREDIENTES</h2>
         
         <ul class="space-y-2 text-gray-800">
           {ingredients.map(ingredient => (
-            <li class="py-2 border-b border-light-gray">
+            <li class="text py-2 border-b border-light-gray">
               {
                 ingredient.includes('Venepan') ? (
                 // Si el ingrediente incluye "Venepan", lo muestra en negrita y con un color primario
@@ -89,7 +89,7 @@ const { name, image, preparationTime, servings, stars, ingredients, steps } = da
 
       <section class="md:col-span-2 px-6">
         <h2 class="text-2xl text-gray-800 font-semibold mb-4 pb-2">PREPARACIÓN</h2>
-        <ol class="list-decimal list-inside space-y-4 text-gray-800 leading-relaxed">
+        <ol class="list-decimal list-inside text space-y-4 leading-relaxed">
             {steps.map(step => (
                 <li>{step}</li>
             ))}

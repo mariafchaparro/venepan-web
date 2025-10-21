@@ -40,7 +40,7 @@ const panes = hasError ? [] : products.filter(product => product.id_categoria ==
 const soya = hasError ? [] : products.filter(product => product.id_categoria === 'cd369df6-7f77-408d-b84d-6abbdb60e781');
 ---
 
-<section class="section-padding xl:p-20">
+<section class="section-padding xl:p-20 2xl:px-56">
     {hasError && (
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             <p>{errorMessage}</p>
