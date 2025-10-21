@@ -1,6 +1,6 @@
 ---
 name: Tacos de soya
-image: "/src/assets/images/recetas/tacos-de-soya.svg"
+image: "/tacos-de-soya.svg"
 preparationTime: 40
 servings: 4
 stars: 5

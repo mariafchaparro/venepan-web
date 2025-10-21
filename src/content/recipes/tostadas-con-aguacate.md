@@ -1,6 +1,6 @@
 ---
 name: Tostadas con Aguacate
-image: "/src/assets/images/recetas/tostada-con-aguacate.svg"
+image: "/tostada-con-aguacate.svg"
 preparationTime: 15
 servings: 2
 stars: 5

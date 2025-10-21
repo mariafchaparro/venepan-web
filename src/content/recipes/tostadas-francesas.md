@@ -1,6 +1,6 @@
 ---
 name: Tostadas Francesas
-image: "/src/assets/images/recetas/tostadas-francesas.svg"
+image: "/tostadas-francesas.svg"
 preparationTime: 10
 servings: 4
 stars: 4
