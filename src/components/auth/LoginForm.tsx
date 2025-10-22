@@ -83,7 +83,7 @@ export default function LoginForm() {
             <input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              placeholder="Password"
+              placeholder="Contraseña"
               value={password}
               onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
               className="border-b-2 border-light-gray p-3 w-full focus:border-primary outline-none"
