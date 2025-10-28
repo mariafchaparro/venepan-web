@@ -16,12 +16,11 @@ export async function getStaticPaths() {
   }));
 }
 
-// Obtenemos los datos de la receta específica para esta página
 const { recipe } = Astro.props;
 const { data } = recipe;
 const { name, image, preparationTime, servings, stars, ingredients, steps } = data;
-
 ---
+
 <Layout title=`Recetas - ${name}`> 
   <DarkBanner
     image={bannerRecetas}
@@ -65,7 +64,6 @@ const { name, image, preparationTime, servings, stars, ingredients, steps } = da
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-      
       <aside class="md:col-span-1 px-6 rounded-lg">
         <h2 class="text-2xl text-gray-800 font-semibold mb-4 pb-2">INGREDIENTES</h2>
         
@@ -83,7 +81,6 @@ const { name, image, preparationTime, servings, stars, ingredients, steps } = da
               }
             </li>
           ))}
-          
         </ul>
       </aside>
 
@@ -96,6 +93,5 @@ const { name, image, preparationTime, servings, stars, ingredients, steps } = da
         </ol>
       </section>
     </div>
-
   </section>
 </Layout>

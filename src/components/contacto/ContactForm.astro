@@ -1,26 +1,343 @@
 <section class="mt-12 md:w-1/2 md:mt-0">
-    <form action="POST" class="flex flex-col w-full text-sm text-gray-800 p-2 md:max-w-[500px] md:justify-self-end md:gap-3">
-        <div class="flex flex-col mb-4 gap-2">
-          <label for="nombre-completo" class="font-medium">Nombre y apellido</label>
-          <input type="text" name="nombre-completo" id="nombre-completo" placeholder="Tu nombre y apellido" required class="border border-light-gray p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all">
+    <form 
+        id="contact-form" 
+        class="flex flex-col w-full text-sm text-gray-800 p-2 md:max-w-[500px] md:justify-self-end md:gap-3"
+    >
+        <div id="success-message" class="hidden p-4 mb-4 bg-green-50 border border-green-200 rounded-lg">
+            <p class="text-green-800 font-medium">¡Mensaje enviado exitosamente!</p>
+            <p class="text-green-700 text-xs mt-1">Nos pondremos en contacto contigo pronto.</p>
         </div>
-    
-        <div class="flex flex-col mb-4 gap-2">
-          <label for="telefono" class="font-medium">Número de teléfono</label>
-          <input type="tel" name="telefono" id="telefono" placeholder="Tu número de teléfono" required class="border border-light-gray p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all">
-        </div>
-    
-        <div class="flex flex-col mb-4 gap-2">
-          <label for="correo" class="font-medium">Correo electrónico</label>
-          <input type="email" name="correo" id="correo" placeholder="Tu correo electrónico" required class="border border-light-gray p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all">
-        </div>
-    
-        <div class="flex flex-col mb-4 gap-2">
-          <label for="mensaje" class="font-medium">Mensaje</label>
-          <input type="text" name="mensaje" id="mensaje" placeholder="Escrible tu mensaje aquí" required class="border border-light-gray p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all">
-        </div>
-    
-        <button type="submit" class="btn w-full mt-3">Enviar</button>
-    </form>
-</section> 
 
+        <div id="error-message" class="hidden p-4 mb-4 bg-red-50 border border-red-200 rounded-lg">
+            <p class="text-red-800 font-medium" id="error-text"></p>
+        </div>
+
+        <div class="flex flex-col mb-4 gap-2">
+            <label for="nombre-completo" class="font-medium">Nombre y apellido</label>
+            <input 
+                type="text" 
+                name="nombre_cliente" 
+                id="nombre-completo" 
+                placeholder="Tu nombre y apellido" 
+                required 
+                minlength="3"
+                maxlength="100"
+                class="border border-light-gray p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+            >
+            <span class="text-red-600 text-xs hidden" id="error-nombre"></span>
+        </div>
+    
+        <div class="flex flex-col mb-4 gap-2">
+            <label for="telefono" class="font-medium">Número de teléfono</label>
+            <input 
+                type="tel" 
+                name="telefono_cliente" 
+                id="telefono" 
+                placeholder="Tu número de teléfono" 
+                required 
+                minlength="7"
+                maxlength="15"
+                class="border border-light-gray p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+            >
+            <span class="text-red-600 text-xs hidden" id="error-telefono"></span>
+        </div>
+    
+        <div class="flex flex-col mb-4 gap-2">
+            <label for="correo" class="font-medium">Correo electrónico</label>
+            <input 
+                type="email" 
+                name="correo_cliente" 
+                id="correo" 
+                placeholder="Tu correo electrónico" 
+                required
+                maxlength="100"
+                class="border border-light-gray p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+            >
+            <span class="text-red-600 text-xs hidden" id="error-correo"></span>
+        </div>
+    
+        <div class="flex flex-col mb-4 gap-2">
+            <label for="mensaje" class="font-medium">Mensaje</label>
+            <textarea 
+                name="mensaje_cliente" 
+                id="mensaje" 
+                placeholder="Escribe tu mensaje aquí" 
+                required
+                minlength="10"
+                maxlength="500"
+                rows="4"
+                class="border border-light-gray p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none"
+            ></textarea>
+            <span class="text-gray-500 text-xs" id="mensaje-counter">0/500 caracteres</span>
+            <span class="text-red-600 text-xs hidden" id="error-mensaje"></span>
+        </div>
+
+        <button 
+            type="submit" 
+            id="submit-btn"
+            class="btn w-full mt-3 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+            <span id="btn-text">Enviar</span>
+            <span id="btn-loading" class="hidden">Enviando...</span>
+        </button>
+    </form>
+</section>
+
+<script>
+    import { actions, isInputError } from 'astro:actions';
+
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+    const btnText = document.getElementById('btn-text') as HTMLSpanElement;
+    const btnLoading = document.getElementById('btn-loading') as HTMLSpanElement;
+    const successMessage = document.getElementById('success-message') as HTMLDivElement;
+    const errorMessage = document.getElementById('error-message') as HTMLDivElement;
+    const errorText = document.getElementById('error-text') as HTMLParagraphElement;
+
+    // Elementos de input
+    const nombreInput = document.getElementById('nombre-completo') as HTMLInputElement;
+    const telefonoInput = document.getElementById('telefono') as HTMLInputElement;
+    const correoInput = document.getElementById('correo') as HTMLInputElement;
+    const mensajeTextarea = document.getElementById('mensaje') as HTMLTextAreaElement;
+    const mensajeCounter = document.getElementById('mensaje-counter') as HTMLSpanElement;
+
+    // Elementos de error
+    const errorNombre = document.getElementById('error-nombre') as HTMLSpanElement;
+    const errorTelefono = document.getElementById('error-telefono') as HTMLSpanElement;
+    const errorCorreo = document.getElementById('error-correo') as HTMLSpanElement;
+    const errorMensaje = document.getElementById('error-mensaje') as HTMLSpanElement;
+
+    // Contador de caracteres para el mensaje
+    mensajeTextarea?.addEventListener('input', () => {
+        const length = mensajeTextarea.value.length;
+        mensajeCounter.textContent = `${length}/500 caracteres`;
+        
+        if (length > 500) {
+            mensajeCounter.classList.add('text-red-600');
+            mensajeCounter.classList.remove('text-gray-500');
+        } else {
+            mensajeCounter.classList.remove('text-red-600');
+            mensajeCounter.classList.add('text-gray-500');
+        }
+    });
+
+    // Función para mostrar errores de validación
+    function showFieldError(element: HTMLSpanElement, message: string) {
+        element.textContent = message;
+        element.classList.remove('hidden');
+    }
+
+    // Función para ocultar errores de validación
+    function hideFieldError(element: HTMLSpanElement) {
+        element.classList.add('hidden');
+        element.textContent = '';
+    }
+
+    // Función para limpiar todos los mensajes
+    function clearMessages() {
+        successMessage?.classList.add('hidden');
+        errorMessage?.classList.add('hidden');
+        hideFieldError(errorNombre);
+        hideFieldError(errorTelefono);
+        hideFieldError(errorCorreo);
+        hideFieldError(errorMensaje);
+    }
+
+    // Validación del frontend
+    function validateForm(): { isValid: boolean; errors: Record<string, string> } {
+        const errors: Record<string, string> = {};
+        let isValid = true;
+
+        // Validar nombre
+        const nombre = nombreInput.value.trim();
+        if (nombre.length < 3) {
+            errors.nombre = 'El nombre debe tener al menos 3 caracteres';
+            isValid = false;
+        } else if (nombre.length > 100) {
+            errors.nombre = 'El nombre es demasiado largo';
+            isValid = false;
+        } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(nombre)) {
+            errors.nombre = 'El nombre solo puede contener letras y espacios';
+            isValid = false;
+        }
+
+        // Validar teléfono
+        const telefono = telefonoInput.value.trim();
+        if (telefono.length < 7) {
+            errors.telefono = 'El teléfono debe tener al menos 7 dígitos';
+            isValid = false;
+        } else if (telefono.length > 15) {
+            errors.telefono = 'El teléfono es demasiado largo';
+            isValid = false;
+        } else if (!/^[0-9+\-\s()]+$/.test(telefono)) {
+            errors.telefono = 'El teléfono solo puede contener números y símbolos válidos';
+            isValid = false;
+        }
+
+        // Validar correo
+        const correo = correoInput.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(correo)) {
+            errors.correo = 'Correo electrónico inválido';
+            isValid = false;
+        } else if (correo.length < 5) {
+            errors.correo = 'El correo es demasiado corto';
+            isValid = false;
+        } else if (correo.length > 100) {
+            errors.correo = 'El correo es demasiado largo';
+            isValid = false;
+        }
+
+        // Validar mensaje
+        const mensaje = mensajeTextarea.value.trim();
+        if (mensaje.length < 10) {
+            errors.mensaje = 'El mensaje debe tener al menos 10 caracteres';
+            isValid = false;
+        } else if (mensaje.length > 500) {
+            errors.mensaje = 'El mensaje es demasiado largo (máximo 500 caracteres)';
+            isValid = false;
+        }
+
+        return { isValid, errors };
+    }
+
+    // Mapeo de nombres de campos del servidor a elementos del DOM
+    const fieldErrorMap: Record<string, HTMLSpanElement> = {
+        'nombre_cliente': errorNombre,
+        'telefono_cliente': errorTelefono,
+        'correo_cliente': errorCorreo,
+        'mensaje_cliente': errorMensaje,
+    };
+
+    // Manejar errores de validación de Zod desde el servidor
+    function handleZodErrors(error: any) {
+        if (isInputError(error)) {
+            // error.fields contiene los errores de cada campo
+            const fields = error.fields;
+            let hasErrors = false;
+
+            // Iterar sobre los errores y mostrarlos
+            for (const [fieldName, fieldErrors] of Object.entries(fields)) {
+                const errorElement = fieldErrorMap[fieldName];
+                if (errorElement && Array.isArray(fieldErrors) && fieldErrors.length > 0) {
+                    showFieldError(errorElement, fieldErrors[0]);
+                    hasErrors = true;
+                }
+            }
+
+            // Si hay errores de campo, no mostrar el mensaje general
+            if (!hasErrors) {
+                errorText.textContent = 'Por favor, verifica los datos ingresados';
+                errorMessage?.classList.remove('hidden');
+            }
+        } else {
+            // Otros tipos de errores
+            errorText.textContent = error.message || 'Ocurrió un error al enviar el mensaje';
+            errorMessage?.classList.remove('hidden');
+        }
+    }
+
+    // Manejar el envío del formulario
+    form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearMessages();
+
+        // Validar formulario en el frontend primero
+        const { isValid, errors } = validateForm();
+
+        if (!isValid) {
+            // Mostrar errores de validación del frontend
+            if (errors.nombre) showFieldError(errorNombre, errors.nombre);
+            if (errors.telefono) showFieldError(errorTelefono, errors.telefono);
+            if (errors.correo) showFieldError(errorCorreo, errors.correo);
+            if (errors.mensaje) showFieldError(errorMensaje, errors.mensaje);
+            return;
+        }
+
+        // Deshabilitar botón y mostrar loading
+        submitBtn.disabled = true;
+        btnText?.classList.add('hidden');
+        btnLoading?.classList.remove('hidden');
+
+        try {
+            const formData = new FormData(form);
+            
+            const { data, error } = await actions.contacts.insertContact({
+                nombre_cliente: formData.get('nombre_cliente') as string,
+                telefono_cliente: formData.get('telefono_cliente') as string,
+                correo_cliente: formData.get('correo_cliente') as string,
+                mensaje_cliente: formData.get('mensaje_cliente') as string,
+            });
+
+            if (error) {
+                // Manejar errores de Zod (validación del servidor)
+                handleZodErrors(error);
+                console.error('Error:', error);
+            } else if (data?.success) {
+                // Éxito
+                successMessage?.classList.remove('hidden');
+                form.reset();
+                mensajeCounter.textContent = '0/500 caracteres';
+                
+                // Scroll al mensaje de éxito
+                successMessage?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                
+                // Ocultar mensaje de éxito después de 5 segundos
+                setTimeout(() => {
+                    successMessage?.classList.add('hidden');
+                }, 5000);
+            }
+        } catch (err) {
+            console.error('Error inesperado:', err);
+            errorText.textContent = 'Ocurrió un error inesperado. Por favor, intenta nuevamente más tarde.';
+            errorMessage?.classList.remove('hidden');
+        } finally {
+            // Rehabilitar botón
+            submitBtn.disabled = false;
+            btnText?.classList.remove('hidden');
+            btnLoading?.classList.add('hidden');
+        }
+    });
+
+    // Validación en tiempo real
+    nombreInput?.addEventListener('blur', () => {
+        const nombre = nombreInput.value.trim();
+        if (nombre && nombre.length < 3) {
+            showFieldError(errorNombre, 'El nombre debe tener al menos 3 caracteres');
+        } else if (nombre && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(nombre)) {
+            showFieldError(errorNombre, 'El nombre solo puede contener letras y espacios');
+        } else {
+            hideFieldError(errorNombre);
+        }
+    });
+
+    telefonoInput?.addEventListener('blur', () => {
+        const telefono = telefonoInput.value.trim();
+        if (telefono && telefono.length < 7) {
+            showFieldError(errorTelefono, 'El teléfono debe tener al menos 7 dígitos');
+        } else if (telefono && !/^[0-9+\-\s()]+$/.test(telefono)) {
+            showFieldError(errorTelefono, 'El teléfono solo puede contener números y símbolos válidos');
+        } else {
+            hideFieldError(errorTelefono);
+        }
+    });
+
+    correoInput?.addEventListener('blur', () => {
+        const correo = correoInput.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (correo && !emailRegex.test(correo)) {
+            showFieldError(errorCorreo, 'Correo electrónico inválido');
+        } else {
+            hideFieldError(errorCorreo);
+        }
+    });
+
+    mensajeTextarea?.addEventListener('blur', () => {
+        const mensaje = mensajeTextarea.value.trim();
+        if (mensaje && mensaje.length < 10) {
+            showFieldError(errorMensaje, 'El mensaje debe tener al menos 10 caracteres');
+        } else {
+            hideFieldError(errorMensaje);
+        }
+    });
+</script>

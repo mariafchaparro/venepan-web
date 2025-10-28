@@ -1,0 +1,137 @@
+---
+import AuthLayout from "../layouts/AuthLayout.astro";
+
+export const prerender = false;
+
+// Evita el almacenamiento en caché
+Astro.response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+Astro.response.headers.set('Pragma', 'no-cache');
+Astro.response.headers.set('Expires', '0');
+---
+
+<AuthLayout title="Iniciar Sesión">
+    <section class="relative flex justify-center items-center h-dvh w-dvw bg-white">
+        <div class="absolute top-5 left-3 flex items-center">
+            <img src="/icons/chevron-left.svg" alt="Flecha atrás" class="w-4" />
+
+            <a href="/" class="text-gray-600 text-sm hover:underline">Volver al inicio</a>
+        </div>
+
+        <div class="flex flex-col items-center justify-center bg-white p-8 gap-10">
+            <img src="/icons/logo.svg" alt="Venepan Logo" class="w-20" />
+
+            <div class="flex flex-col justify-center items-center gap-2">
+                <h1 class="text-gray-800 font-semibold text-3xl">¡Bienvenido de vuelta!</h1>
+                <p class="text-gray-600 mb-0">Ingresa tus datos para continuar</p>
+            </div>
+            
+            <div id="error-message" class="max-w-[40ch] bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded  justify-center hidden">
+            </div>
+
+            <form action="/api/auth/signin" id="signin-form" class="flex flex-col gap-6 w-80">
+                <input id="email" name="email" type="email" placeholder="Email" required autocomplete="email" class="border-b-2 border-light-gray p-3 focus:border-primary outline-none"/>
+
+                <input id="password" name="password" type="password" placeholder="Contraseña" required autocomplete="current-password" class="border-b-2 border-light-gray p-3 w-full focus:border-primary outline-none"/>
+                
+                <div class="flex justify-between items-center">
+                    <label for="show-password" class="text-gray-600 text-sm flex items-center gap-1">
+                        <input id="show-password" type="checkbox"/>
+                        Mostrar contraseña
+                    </label>
+
+                    <a href="/recover-password" class="text-primary hover:underline self-end text-sm"> Olvidé mi contraseña</a>
+                </div>
+
+                <div class="flex flex-col mt-6">
+                    <button type="submit" id="submit-btn" class="btn">Ingresar</button>
+                </div>
+            </form>
+        </div>
+    </section>
+<AuthLayout/>
+
+<script lang="ts">
+    const form = document.getElementById('signin-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const errorMessageDiv = document.getElementById('error-message');
+    const showPasswordCheckbox = document.getElementById('show-password');
+    const submitBtn = document.getElementById('submit-btn');
+
+    let loading = false;
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    showPasswordCheckbox?.addEventListener('change', () => {
+        if (passwordInput) {
+            passwordInput.type = showPasswordCheckbox.checked ? 'text' : 'password';
+        }
+    });
+
+    const isValidEmail = (email) => {
+        return regex.test(email);
+    }
+    
+    form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (loading) return;
+
+        errorMessageDiv.classList.add('hidden');
+        errorMessageDiv.classList.remove('flex');
+
+        let errorMessage = '';
+        
+        // Validaciones previas al fetch
+        if (!emailInput?.value || emailInput.value.trim() === "" || !isValidEmail(emailInput.value)) {
+            errorMessage = 'Ingresa un email válido.';
+        } else if (!passwordInput?.value || passwordInput.value.trim() === "" || passwordInput.value.length < 6) {
+            errorMessage = 'La contraseña debe tener al menos 6 caracteres.';
+        }
+
+        if (errorMessage) {
+            errorMessageDiv.textContent = errorMessage;
+            errorMessageDiv.classList.remove('hidden');
+            errorMessageDiv.classList.add('flex');
+            return;
+        }
+
+        loading = true;
+        submitBtn.disabled = true; 
+        submitBtn.textContent = 'Ingresando...';
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/api/auth/signin', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json(); 
+
+            if (response.ok && data.redirectUrl) {
+                window.location.href = data.redirectUrl;
+                return;
+            } 
+            
+            // Error: capturado del JSON del servidor
+            errorMessage = data.error || 'Ocurrió un error inesperado. Inténtalo de nuevo.';
+
+        } catch (error) {
+            // Error de conexión de red
+            errorMessage = 'Error de conexión. Verifica tu red.';
+        } finally {
+            loading = false;
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Ingresar';
+        }
+
+        if (errorMessage) {
+            if (errorMessageDiv) {
+                errorMessageDiv.textContent = errorMessage;
+                errorMessageDiv.classList.remove('hidden');
+                errorMessageDiv.classList.add('flex');
+            }
+        }
+    });
+</script>

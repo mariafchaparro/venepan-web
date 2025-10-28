@@ -66,7 +66,7 @@ export const products = {
           throw error;
         }
         
-        // Para otros errores, crear un ActionError genérico
+        // Para otros errores, ActionError genérico
         throw new ActionError({
           code: 'INTERNAL_SERVER_ERROR',
           message: error instanceof Error 
@@ -77,45 +77,4 @@ export const products = {
     }
   }),
   
-  getProductByName: defineAction({
-    input: z.object({
-      name: z.string()
-    }),
-    
-    handler: async ({ name }) => {
-      try {
-        const { data, error } = await supabase
-          .from('sgp_m_productos')
-          .select('*')
-          .eq('nombre_producto', name)
-          .single();
-        
-        if (error) {
-          if (error.code === 'PGRST116') {
-            throw new ActionError({
-              code: 'NOT_FOUND',
-              message: `Producto con nombre ${name} no encontrado`,
-            });
-          }
-          
-          throw new ActionError({
-            code: 'BAD_REQUEST',
-            message: error.message,
-          });
-        }
-        
-        return data as Product;
-        
-      } catch (error) {
-        if (error instanceof ActionError) {
-          throw error;
-        }
-        
-        throw new ActionError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Error al obtener el producto',
-        });
-      }
-    }
-  }),    
 };
