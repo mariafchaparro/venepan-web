@@ -1,71 +1,66 @@
 import { defineMiddleware } from 'astro:middleware';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  import.meta.env.PUBLIC_SUPABASE_URL,
-  import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-);
+import { supabase } from './lib/supabase'; 
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const { url, cookies, redirect, isPrerendered } = context;
+    const { cookies, url, redirect, isPrerendered } = context;
 
-  // Si la página está prerenderizada, no ejecutar lógica de autenticación
-  // Esto evita el error de acceder a cookies/headers en páginas estáticas
-  if (isPrerendered) {
-    return next();
-  }
+    // Si la página está prerenderizada, no ejecutar lógica de autenticación
+    // Esto evita el error de acceder a cookies/headers en páginas estáticas
 
-  // El resto de tu lógica solo se ejecuta para páginas SSR
-  if (url.pathname === '/callback') {
-    return next();
-  }
-  
-  // Obtener el token de la cookie
-  const accessToken = cookies.get('sb-access-token')?.value;
-  const refreshToken = cookies.get('sb-refresh-token')?.value;
-
-  // Rutas protegidas que requieren autenticación
-  const protectedRoutes = ['/dashboard'];
-  const isProtectedRoute = protectedRoutes.some(route => 
-    url.pathname.startsWith(route)
-  );
-
-  // Rutas de autenticación (login, registro, etc.)
-  const authRoutes = ['/login', '/recover-password'];
-  const isAuthRoute = authRoutes.some(route => 
-    url.pathname.startsWith(route)
-  );
-
-  let user = null;
-
-  // Verificar si hay tokens válidos
-  if (accessToken && refreshToken) {
-    try {
-      const { data: { user: authUser }, error } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      });
-
-      if (!error && authUser) {
-        user = authUser;
-      }
-    } catch (error) {
-      console.error('Error verificando sesión:', error);
+    if (isPrerendered) {
+        return next();
     }
-  }
 
-  // Si está en una ruta protegida y no está autenticado
-  if (isProtectedRoute && !user) {
-    return redirect('/login');
-  }
+    const isProtectedRoute = url.pathname.startsWith('/dashboard');
 
-  // Si está en una ruta de autenticación y ya está autenticado
-  if (isAuthRoute && user) {
-    return redirect('/dashboard');
-  }
+    // Obtener los tokens de las cookies:
+    const accessToken = cookies.get("sb-access-token")?.value;
+    const refreshToken = cookies.get("sb-refresh-token")?.value;
 
-  // Agregar información del usuario al contexto
-  context.locals.user = user;
+    if (isProtectedRoute) {
 
-  return next();
+        if (!accessToken || !refreshToken) {
+            
+            cookies.delete("sb-access-token", { path: "/" });
+            cookies.delete("sb-refresh-token", { path: "/" });
+
+            return redirect('/ingresar');
+        }
+
+        try {
+            // Establece o refresca la sesión
+            const { error, data } = await supabase.auth.setSession({
+                refresh_token: refreshToken,
+                access_token: accessToken,
+            });
+
+            if (error) {
+                console.log("Error al establecer la sesión", error);
+
+                cookies.delete("sb-access-token", { path: "/" });
+                cookies.delete("sb-refresh-token", { path: "/" });
+
+                return redirect('/ingresar'); 
+            }
+
+            // Guardar el usuario en el contexto para uso posterior
+            context.locals.user = data.user;
+            return next();
+
+        } catch (error) {
+            console.log("Error al validar la sesión", error)
+            
+            cookies.delete("sb-access-token", { path: "/" });
+            cookies.delete("sb-refresh-token", { path: "/" });
+
+            return redirect('/ingresar'); 
+        }
+    }
+    
+    // Redirigir usuarios autenticados que intentan acceder a /ingresar
+    if (url.pathname === '/ingresar' && accessToken && refreshToken) {
+        return redirect('/dashboard'); 
+    }
+    
+    return next();
 });

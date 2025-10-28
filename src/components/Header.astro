@@ -44,7 +44,7 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
                             class:list={[
                                 "px-3 py-2 rounded-2xl", 
                                 linkClasses,
-                                isActive && activeClassesDesktop // Apply active classes if the link is active
+                                isActive && activeClassesDesktop 
                             ]}
                         >
                             {link.text}
@@ -56,7 +56,7 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
     </nav>
 
     <div class="hidden md:flex gap-2 items-center">
-        <a href="/login" class:list={["text-sm font-semibold", classicHeader? "text-primary" : "text-white"]}>Iniciar Sesión</a>
+        <a href="/ingresar" class:list={["text-sm font-semibold", classicHeader? "text-primary" : "text-white"]}>Iniciar Sesión</a>
         <hr class:list={["rotate-90 w-3 h-0.5", classicHeader? "text-gray-700" : "text-white"]}/>
         <a href="/contacto" class="btn text-sm hidden md:flex">Contáctanos</a>
     </div>
@@ -117,7 +117,7 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
     
             <div class="w-full flex flex-col gap-4 mt-8">
                 <a href="/contacto" class="btn text-sm w-fill">Contáctanos</a>
-                <a href="/login" class="text-primary text-sm font-semibold self-center">Iniciar Sesión</a>
+                <a href="/ingresar" class="text-primary text-sm font-semibold self-center">Iniciar Sesión</a>
                 <p class="text-sm text-gray-500 self-center">Copyright © Alimentos Venepan</p>
             </div>
         </nav>
@@ -134,22 +134,21 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
     function toggleMenu() {
         const isExpanded = menuButton?.getAttribute('aria-expanded') === 'true';
 
-        // Sets ARIA
         menuButton?.setAttribute('aria-expanded', String(!isExpanded));
 
-        // Toggl clickable state
+        // Habilita o deshabilita la interacción con el menú
         menuContainer?.classList.toggle('pointer-events-none');
         
-        // Backdrop animation (fade in/out)
+        // Animación backdrop (fade in/out)
         menuBackdrop?.classList.toggle('opacity-0');
         
-        // Menu animation (slide in/out)
+        // Animacion del menu
         menuContent?.classList.toggle('-translate-x-full');
 
         document.body.classList.toggle('overflow-hidden');
     }
 
-    // Open and close menu
+    // Abrir y cerrar el menú
     menuButton?.addEventListener('click', toggleMenu);
     closeMenuButton?.addEventListener('click', toggleMenu);
     menuBackdrop?.addEventListener('click', toggleMenu);
