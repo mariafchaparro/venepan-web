@@ -1,0 +1,122 @@
+---
+import type { Product, Benefit } from '../../actions/products';
+
+interface Props {
+  products: Product[];
+}
+
+const { products } = Astro.props;
+---
+
+<div id="product-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/25 bg-opacity-50">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-4xl w-full md:h-[500px] max-h-[90vh] overflow-y-auto relative">
+        <button id="modal-close-btn" class="absolute top-5 right-4 z-10 cursor-pointer" aria-label="Cerrar modal">
+            <img src="/icons/x.svg" alt="Cerrar" loading={'eager'}/>
+        </button>
+  
+        <div class="flex flex-col h-full md:flex-row gap-8 md:gap-12">   
+            <section class="flex flex-col items-center p-2 justify-center md:bg-light-gray-2/70 md:w-1/2 md:h-auto">
+                <img id="modal-image" src="" alt="Imagen del producto" class="h-64 w-auto object-contain md:h-80"/>
+            </section>
+
+            <section class="md:w-1/2 flex flex-col">
+                <div class="mb-4">
+                    <h2 id="modal-name" class="text-3xl md:section-title font-bold text-gray-800 mb-1">
+                        Nombre del Producto
+                    </h2>
+                    <p id="modal-weight" class="text-lg text-gray-600 font-medium">
+                        0g
+                    </p>
+                </div>
+
+                <div class="mb-6">
+                    <p id="modal-description" class="text-gray-800 leading-relaxed">
+                        Descripción del producto.
+                    </p>
+                </div>
+
+                <div class="mb-2">
+                    <ul id="modal-benefits-list" class="space-y-2"></ul>
+                </div>
+            </section>
+        </div>
+  </div>
+</div>
+
+
+<script define:vars={{ products }}>
+    const modal = document.getElementById('product-modal');
+    const closeButton = document.getElementById('modal-close-btn');
+    const modalImage = document.getElementById('modal-image');
+    const modalName = document.getElementById('modal-name');
+    const modalWeight = document.getElementById('modal-weight');
+    const modalDescription = document.getElementById('modal-description');
+    const modalBenefitsList = document.getElementById('modal-benefits-list');
+
+    document.addEventListener('click', (e) => {
+        const button = e.target.closest('.secondary-btn[data-product-id]');
+
+        if (button) {
+            const productId = button.getAttribute('data-product-id');
+            const product = products.find(p => p.id_producto === productId);
+            
+            if (product) {
+            openModal(product);
+            }
+        }
+    });
+
+
+    closeButton.addEventListener('click', closeModal);
+        
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+        closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    function openModal(product) {
+        if (!product || !modal) return;
+
+        // Rellenamos los datos
+        modalImage.src = product.imagen_producto;
+        modalImage.alt = product.nombre_producto;
+        modalName.textContent = product.nombre_producto;
+        modalWeight.textContent = `${product.peso_producto}g`;
+        modalDescription.textContent = product.descripcion_producto || 'Descripción del producto.';
+
+        // Limpiamos y rellenamos la lista de beneficios
+        modalBenefitsList.innerHTML = ''; // Limpiar lista anterior
+        if (product.sgp_m_beneficios && product.sgp_m_beneficios.length > 0) {
+            product.sgp_m_beneficios.forEach(benefit => {
+                const li = document.createElement('li');
+                
+                li.className = "text-gray-800 flex items-center gap-2";
+                li.innerHTML = `
+                    <div class="min-w-2.5 min-h-2.5 rounded-full bg-green-600"></div>
+                    ${benefit.descripcion_beneficio}
+                `;
+                modalBenefitsList.appendChild(li);
+            });
+        }
+
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        if (!modal) return;
+        
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = 'unset';
+    }
+</script>
