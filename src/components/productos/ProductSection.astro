@@ -1,95 +1,91 @@
 ---
-import Product from "./Product.astro"
+import Product from "./Product.astro";
 import ProductModal from "./ProductModal.astro";
-import { actions } from 'astro:actions';
-import type { Product as ProductType } from '../../actions/products';
+import { actions } from "astro:actions";
+import type { Product as ProductType } from "../../actions/products";
 
 let products: ProductType[] = [];
 
 let hasError = false;
-let errorMessage = '';
+let errorMessage = "";
 
-const { data, error } = await Astro.callAction(actions.products.getProducts, {});
+const { data, error } = await Astro.callAction(
+    actions.products.getProducts,
+    {},
+);
 
 if (error) {
-  hasError = true;
-  
+    hasError = true;
+
     // Manejar según el código de error
     switch (error.code) {
-    case 'BAD_REQUEST':
-        errorMessage = 'Error al conectar con la base de datos. Por favor, recarga la página.';
-        break;
-    case 'NOT_FOUND':
-        errorMessage = 'No hay productos disponibles en este momento.';
-        break;
-    case 'INTERNAL_SERVER_ERROR':
-        errorMessage = 'Ocurrió un error en el servidor. Por favor, intenta más tarde.';
-        break;
-    default:
-        errorMessage = 'Ocurrió un error inesperado.';
+        case "BAD_REQUEST":
+            errorMessage =
+                "Error al conectar con la base de datos. Por favor, recarga la página.";
+            break;
+        case "NOT_FOUND":
+            errorMessage = "No hay productos disponibles en este momento.";
+            break;
+        case "INTERNAL_SERVER_ERROR":
+            errorMessage =
+                "Ocurrió un error en el servidor. Por favor, intenta más tarde.";
+            break;
+        default:
+            errorMessage = "Ocurrió un error inesperado.";
     }
-    console.error('Error de Action:', error.message);
+    console.error("Error de Action:", error.message);
 } else {
     products = data || [];
 }
 
-// Filtrar productos por categoría
-const cereales = hasError ? [] : products.filter(product => product.id_categoria === '922fb70d-3a54-48e5-91cf-effb9ab3d3cb');
-const panes = hasError ? [] : products.filter(product => product.id_categoria === '23351604-a1b5-452b-8d7a-1e8db7395da1');
-const soya = hasError ? [] : products.filter(product => product.id_categoria === 'cd369df6-7f77-408d-b84d-6abbdb60e781');
+// Agrupar productos por categoría
+const productsByCategory = products.reduce((acc, product) => {
+        const categoryName =
+            product.sgp_m_categorias?.nombre_categoria || "Sin Categoría";
+
+        if (!acc[categoryName]) {
+            acc[categoryName] = [];
+        }
+
+        acc[categoryName].push(product);
+        return acc;
+    },
+    {} as Record<string, ProductType[]>,
+);
+
+// Obtener nombres de categorías ordenados (opcional: ordenar alfabéticamente o por algún otro criterio)
+const categories = Object.keys(productsByCategory).sort();
 ---
 
 <section class="section-padding xl:p-20 2xl:px-56">
-    {hasError && (
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <p>{errorMessage}</p>
-        </div>
-    )}
+    {
+        hasError && (
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <p>{errorMessage}</p>
+            </div>
+        )
+    }
 
-    <h1 class="section-title ml-4" id="Cereales">Cereales</h1>
+    {
+        categories.map((category) => (
+            <>
+                <h1 class="section-title ml-4 mt-8 first:mt-0" id={category}>
+                    {category}
+                </h1>
 
-    <div class="w-full flex flex-wrap justify-between sm:justify-start md:gap-20 mb-10">
-        {
-            cereales?.map((cereal) => ( 
-                <Product
-                    image={cereal.imagen_producto}
-                    name={cereal.nombre_producto}
-                    weight={cereal.peso_producto}
-                    productId={cereal.id_producto}
-                />
-            ))
-        }
-    </div>
-
-    <h1 class="section-title ml-4" id="Panes">Panes</h1>
-
-    <div class="w-full flex flex-wrap justify-between sm:justify-start md:gap-22">
-        {
-            panes?.map((pan) => ( 
-                <Product
-                    image={pan.imagen_producto}
-                    name={pan.nombre_producto}
-                    weight={pan.peso_producto}
-                    productId={pan.id_producto}
-                />
-            ))
-        }
-    </div>
-
-    <h1 class="section-title ml-4 mt-8" id="Soya">Soya</h1>
-
-    <div class="w-full flex flex-wrap justify-between sm:justify-start md:gap-22">
-        {
-            soya?.map((soya) => ( 
-                <Product
-                    image={soya.imagen_producto}
-                    name={soya.nombre_producto}
-                    weight={soya.peso_producto}
-                    productId={soya.id_producto}
-                />
-            ))
-        }
-    </div> 
+                <div class="w-full flex flex-wrap justify-between sm:justify-start md:gap-20 mb-10">
+                    {productsByCategory[category]?.map((product) => (
+                        <Product
+                            image={product.imagen_producto}
+                            name={product.nombre_producto}
+                            weight={product.peso_producto}
+                            productId={product.id_producto}
+                        />
+                    ))}
+                </div>
+            </>
+        ))
+    }
 
     <ProductModal {products} />
 </section>

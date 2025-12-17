@@ -7,6 +7,11 @@ export type Benefit = {
   descripcion_beneficio: string;
 };
 
+export type Category = {
+  id_categorias: string;
+  nombre_categoria: string;
+};
+
 export type Product = {
   id_producto: string;
   nombre_producto: string;
@@ -15,6 +20,7 @@ export type Product = {
   imagen_producto: string;
   id_categoria: string;
   sgp_m_beneficios: Benefit[];
+  sgp_m_categorias: Category;
 };
 
 export const products = {
@@ -29,7 +35,7 @@ export const products = {
         // Construir query base
         let query = supabase
           .from('sgp_m_productos')
-          .select('*, sgp_m_beneficios(*)');
+          .select('*, sgp_m_beneficios(*), sgp_m_categorias(id_categorias, nombre_categoria)');
         
         // Aplicar filtro de categoría si se proporciona
         if (input?.category) {
