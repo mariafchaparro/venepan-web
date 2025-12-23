@@ -43,6 +43,21 @@ export const onRequest = defineMiddleware(async (context, next) => {
                 return redirect('/ingresar'); 
             }
 
+            // Actualizar cookies con las nuevas credenciales si han cambiado
+            if (data.session) {
+                const { access_token, refresh_token } = data.session;
+                cookies.set("sb-access-token", access_token, {
+                    sameSite: "strict",
+                    path: "/",
+                    secure: true,
+                });
+                cookies.set("sb-refresh-token", refresh_token, {
+                    sameSite: "strict",
+                    path: "/",
+                    secure: true,
+                }); 
+            }
+
             // Guardar el usuario en el contexto para uso posterior
             context.locals.user = data.user;
             return next();

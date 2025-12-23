@@ -19,26 +19,25 @@ export const prerender = false;
 <script>
     const signoutBtn = document.getElementById('signout-btn');
 
-    signoutBtn?.addEventListener('click', () => {
+    signoutBtn?.addEventListener('click', async () => {
         if (signoutBtn instanceof HTMLButtonElement) {
             signoutBtn.disabled = true;
             signoutBtn.textContent = 'Cerrando...';
         }
-    })
 
-    try {
-        const response = await fetch('/api/auth/signout', {
-            method: 'POST',
-        });
-        
-        const data = await response.json();
+        try {
+            const response = await fetch('/api/auth/signout', {
+                method: 'POST',
+            });
+            
+            const data = await response.json();
 
-        if (response.ok && data.redirectUrl) {
-            window.location.href = data.redirectUrl;
-        } else {
-            // En caso de error (ej: error de red o de servidor)
-            alert(data.error || 'Error al cerrar sesión. Intenta recargar la página.');
-        }
+            if (response.ok && data.redirectUrl) {
+                window.location.href = data.redirectUrl;
+            } else {
+                // En caso de error (ej: error de red o de servidor)
+                alert(data.error || 'Error al cerrar sesión. Intenta recargar la página.');
+            }
 
         } catch (error) {
             // Error de conexión de red
@@ -50,4 +49,5 @@ export const prerender = false;
                 signoutBtn.textContent = 'Cerrar Sesión';
             }
         }
+    })
 </script>
