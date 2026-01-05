@@ -1,5 +1,5 @@
 ---
-import AuthLayout from '../layouts/AuthLayout.astro';
+import DashboardLayout from '../layouts/DashboardLayout.astro';
 
 const user = Astro.locals.user;
 const email = user.email;
@@ -7,47 +7,7 @@ const email = user.email;
 export const prerender = false;
 ---
 
-<AuthLayout>
-    <h1 class="text-3xl font-bold mb-4">¡Bienvenido {email}!</h1>
-    <p class="mb-6">Has iniciado sesión correctamente.</p>
-    
-    
-
-    <button id="signout-btn" type="submit" class="btn">Cerrar Sesión</button>
-<AuthLayout/>
-
-<script>
-    const signoutBtn = document.getElementById('signout-btn');
-
-    signoutBtn?.addEventListener('click', async () => {
-        if (signoutBtn instanceof HTMLButtonElement) {
-            signoutBtn.disabled = true;
-            signoutBtn.textContent = 'Cerrando...';
-        }
-
-        try {
-            const response = await fetch('/api/auth/signout', {
-                method: 'POST',
-            });
-            
-            const data = await response.json();
-
-            if (response.ok && data.redirectUrl) {
-                window.location.href = data.redirectUrl;
-            } else {
-                // En caso de error (ej: error de red o de servidor)
-                alert(data.error || 'Error al cerrar sesión. Intenta recargar la página.');
-            }
-
-        } catch (error) {
-            // Error de conexión de red
-            alert('Error de conexión. Verifica tu red.');
-        } finally {
-            // Restablecer el botón en caso de error
-            if (signoutBtn instanceof HTMLButtonElement) {
-                signoutBtn.disabled = false;
-                signoutBtn.textContent = 'Cerrar Sesión';
-            }
-        }
-    })
-</script>
+<DashboardLayout currentPath='/dashboard', title='Dashboard | Alimentos Venepan'>
+    <!-- <h1 class="text-3xl font-bold mb-4">¡Bienvenido {email}!</h1> -->
+    <!-- <p class="mb-6">Has iniciado sesión correctamente.</p> -->
+</DashboardLayout>

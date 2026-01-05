@@ -1,0 +1,116 @@
+---
+import '../styles/global.css';
+
+const { title, currentPath } = Astro.props;
+const user = Astro.locals.user;
+const email = user.email;
+const activeClass = "text-secondary bg-secondary/5 rounded-xl font-semibold";
+
+const navLinks = [
+  { href: "/dashboard", text: "Inicio", icon: "dashboard.svg" },
+  { href: "/dashboard/gestionar-productos", text: "Productos", icon: "package_2.svg" },
+  { href: "/dashboard/gestionar-categorias", text: "Categorías", icon: "category.svg" },
+  { href: "/dashboard/mensajes-clientes", text: "Mensajes", icon: "mail.svg" },
+];
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+		<meta name="description" content="Alimentos Venepan: panes, cereales, soya y productos nutritivos elaborados con ingredientes naturales para una vida saludable en Venezuela." />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="color-scheme" content="light only">
+		<title>{title}</title>
+	</head>
+	<body class="flex flex-col h-screen">
+		<main class="bg-light-blue-dashboard h-full w-full flex">
+            <aside class="bg-white h-full min-w-72 p-6 flex flex-col gap-20 border-r border-gray-200">
+                <section class="flex items-center gap-4">
+                    <img src="/icons/logo.svg" alt="Logo" class="w-12"/>
+                    
+					<div class="flex flex-col">
+						<h1 class="text-gray-800 font-semibold">Alimentos Venepan</h1>
+						<h2 class="text-gray-600 font-semibold text-sm">Módulo Administrativo</h2>
+					</div>
+                </section>
+
+				<nav class="flex flex-col justify-between h-screen">
+					<ul>
+						{navLinks.map(link => {
+							// Check if the current link is active
+							const isActive = currentPath === link.href;
+							
+							return (
+								<li class="mb-4">
+									<a 
+										href={link.href} 
+										class:list={[
+											"text-sm text-gray-800 rounded-2xl block w-full px-4 py-3 cursor-pointer hover:bg-secondary/5 hover:rounded-xl hover:font-semibold hover:text-secondary", 
+											isActive && activeClass 
+										]}
+									>
+										<img src={`/icons/${link.icon}`} alt={`${link.text} icon`} class="inline w-4 mr-4" />
+										{link.text}
+									</a>
+								</li>
+							)
+						})}
+					</ul>
+					<div>
+						<button id="signout-btn" type="submit" class="text-sm text-gray-800 text-start rounded-2xl block w-full px-4 py-3 cursor-pointer hover:bg-secondary/5 hover:rounded-xl hover:font-semibold hover:text-secondary">
+							<img src="/icons/logout.svg" alt="Cerrar Sesión" class="inline w-4 mr-4" />
+							Cerrar Sesión
+						</button>
+						<p class="text-sm text-gray-600">Usuario: <span class="font-semibold">{email}</span> </p>
+					</div>
+				</nav>				
+            </aside>
+            
+			<div class="h-full w-full">
+                <slot />
+            </div>
+		</main>
+
+		<script>
+			const signoutBtn = document.getElementById('signout-btn');
+
+			signoutBtn?.addEventListener('click', async () => {
+				if (signoutBtn instanceof HTMLButtonElement) {
+					signoutBtn.disabled = true;
+					signoutBtn.textContent = 'Cerrando...';
+				}
+
+				try {
+					const response = await fetch('/api/auth/signout', {
+						method: 'POST',
+					});
+					
+					const data = await response.json();
+
+					if (response.ok && data.redirectUrl) {
+						window.location.href = data.redirectUrl;
+					} else {
+						// En caso de error (ej: error de red o de servidor)
+						alert(data.error || 'Error al cerrar sesión. Intenta recargar la página.');
+					}
+
+				} catch (error) {
+					// Error de conexión de red
+					alert('Error de conexión. Verifica tu red.');
+				} finally {
+					// Restablecer el botón en caso de error
+					if (signoutBtn instanceof HTMLButtonElement) {
+						signoutBtn.disabled = false;
+						signoutBtn.textContent = 'Cerrar Sesión';
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
