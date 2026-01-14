@@ -8,6 +8,37 @@ export const prerender = false;
 ---
 
 <DashboardLayout currentPath='/dashboard', title='Dashboard | Alimentos Venepan'>
-    <!-- <h1 class="text-3xl font-bold mb-4">¡Bienvenido {email}!</h1> -->
-    <!-- <p class="mb-6">Has iniciado sesión correctamente.</p> -->
+    <section class="flex flex-col p-12 items-center">
+        <h1 class="main-title text-4xl mb-8 max-w-[800px] text-center ">¡Bienvenido al sistema de gestión de productos de Venepan, <span class="text-4xl text-secondary">{email}</span>!</h1>
+        <p class="text max-w-[70ch] text-gray-600 text-center">En esta sección podrás gestionar el catálogo de productos que se muestra en la web de Venepan y acceder a los mensajes enviados a través del formulario de contacto.</p>
+        
+        <div class="flex flex-wrap gap-6 mt-14">
+            <div class="bg-white w-[350px] h-52 p-6 rounded-3xl flex flex-col justify-between gap-2 card-shadow">
+                <div>
+                    <h2 class="text-xl text-gray-800 font-semibold mb-1">Gestión de Productos</h2>
+                    <p class="text-gray-600">Añade, modifica y elimina productos del catálogo web de Venepan</p>
+                </div>
+                
+                <a href="/dashboard/gestionar-productos" class="dashboard-btn">Gestionar productos</a>
+            </div>
+
+            <div class="bg-white w-[350px] h-52 p-6 rounded-3xl flex flex-col justify-between gap-2 card-shadow">
+                <div>
+                    <h2 class="text-xl text-gray-800 font-semibold mb-1">Gestión de Categorías</h2>
+                    <p class="text-gray-600">Añade, modifica y elimina categorías vinculadas a los productos</p>
+                </div>
+                
+                <a href="/dashboard/gestionar-categorias" class="dashboard-btn bg-orange-600 hover:bg-orange-600/80">Gestionar categorías</a>
+            </div>
+
+            <div class="bg-white w-[350px] h-52 p-6 rounded-3xl flex flex-col justify-between gap-2 card-shadow">
+                <div>
+                    <h2 class="text-xl text-gray-800 font-semibold mb-1">Mensajes de Clientes</h2>
+                    <p class="text-gray-600">Accede a los mensajes enviados a través del formulario de contacto</p>
+                </div>
+                
+                <a href="/dashboard/mensajes-clientes" class="dashboard-btn bg-green-600 hover:bg-green-600/80">Ver mensajes</a>
+            </div>
+        </div>
+    </section>
 </DashboardLayout>

@@ -1,7 +1,159 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import Image from 'astro/components/Image.astro';
+import { actions } from "astro:actions";
+import type { Product as ProductType } from "../../actions/products";
+
+let products: ProductType[] = [];
+
+let hasError = false;
+let errorMessage = "";
+
+const { data, error } = await Astro.callAction(
+    actions.products.getProducts,
+    {},
+);
+
+if (error) {
+    hasError = true;
+
+    // Manejar según el código de error
+    switch (error.code) {
+        case "BAD_REQUEST":
+            errorMessage =
+                "Error al conectar con la base de datos. Por favor, recarga la página.";
+            break;
+        case "NOT_FOUND":
+            errorMessage = "No hay productos disponibles en este momento.";
+            break;
+        case "INTERNAL_SERVER_ERROR":
+            errorMessage =
+                "Ocurrió un error en el servidor. Por favor, intenta más tarde.";
+            break;
+        default:
+            errorMessage = "Ocurrió un error inesperado.";
+    }
+    console.error("Error de Action:", error.message);
+} else {
+    products = data || [];
+}
+
 ---
 <DashboardLayout currentPath='/dashboard/gestionar-productos', title='Dashboard | Gestionar Productos'>
-    <h1>Gestionar Productos</h1>
+    <section class="flex flex-col p-12">
+        <div class="mb-6">
+            <h1 class="main-title text-4xl mb-2">Gestión de Productos</h1>
+            <p class="text text-gray-600 max-w-[70ch]">Añade, modifica y elimina los productos que se muestran en la página "Productos" de la web de Venepan</p>
+        </div>
+
+        <div class="flex justify-between items-center mb-6">
+            <input type="text" id="search-input" placeholder="Buscar producto..." class="input input-bordered w-full max-w-xs text-gray-800 border px-3 py-3 border-gray-300 rounded-2xl focus:ring-2 focus:ring-gray-300 focus:outline-none">
+            <button class="dashboard-btn">Añadir Producto</button>
+        </div>  
+
+        {
+            hasError && (
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <p>{errorMessage}</p>
+                </div>
+            )
+        }
+
+        <div class="relative flex flex-col h-full overflow-y-auto text-gray-800 bg-white shadow-md rounded-lg bg-clip-border">
+            <table class="text-left table-auto">
+                <thead>
+                    <tr>
+                        <th class="p-4 border-b border-slate-300 bg-gray-100">
+                            <p class="block text-sm font-normal leading-none text-gray-600">
+                                Imagen
+                            </p>
+                        </th>
+                        <th class="p-4 border-b  border-slate-300 bg-gray-100">
+                            <p class="block text-sm font-normal leading-none text-gray-600">
+                                Nombre
+                            </p>
+                        </th>
+                        
+                        <th class="p-4 border-b border-slate-300 bg-gray-100">
+                            <p class="block text-sm font-normal leading-none text-gray-600">
+                                Categoría
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-300 bg-gray-100">
+                            <p class="block text-sm font-normal leading-none text-gray-600">
+                                Peso
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-300 bg-gray-100">
+                            <p class="block text-sm font-normal leading-none text-gray-600">Acciones</p>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="products-table-body"> 
+                    {
+                        products.map((product) => (
+                            <tr class="hover:bg-slate-50 product-row" data-product-name={product.nombre_producto.toLowerCase()}>
+                               <td class="p-4 border-b border-slate-200">
+                                    <Image 
+                                        src={product.imagen_producto}
+                                        alt="Imagen del producto"
+                                        class="w-8 h-8 object-contain"
+                                        inferSize={true}
+                                    />
+                                </td> 
+                                <td class="p-4 border-b border-slate-200">
+                                    <p class="block  font-medium text-gray-800">
+                                        {product.nombre_producto}
+                                    </p>
+                                </td>
+                                <td class="p-4 border-b border-slate-200">
+                                    <div class={`text-sm text-center font-medium w-20 px-2 py-1 rounded-full ${
+                                        product.sgp_m_categorias?.nombre_categoria === 'Panes' 
+                                            ? 'bg-orange-100 text-orange-500' 
+                                            : product.sgp_m_categorias?.nombre_categoria === 'Cereales'
+                                                ? 'bg-blue-100 text-blue-500'
+                                                : product.sgp_m_categorias?.nombre_categoria === 'Soya'
+                                                    ? 'bg-green-100 text-green-500'
+                                                    : 'bg-gray-100 text-gray-500'
+                                    }`}>
+                                        {product.sgp_m_categorias?.nombre_categoria}
+                                    </div>
+                                </td>
+                                <td class="p-4 border-b border-slate-200">
+                                    <p class="block font-medium text-gray-600">
+                                        {product.peso_producto}g
+                                    </p>
+                                </td>
+                                <td class="p-4 border-b border-slate-200">
+                                    <div class="flex items-center gap-2">
+                                        <a href="/dashboard/gestionar-productos/editar-producto" class="hover:bg-slate-200 p-2 rounded-full">
+                                            <img src="/icons/edit.svg" alt="Editar" class="w-4 h-4">
+                                        </a>
+                                        <a href="/dashboard/gestionar-productos/eliminar-producto" class="hover:bg-slate-200 p-2 rounded-full">
+                                            <img src="/icons/delete.svg" alt="Eliminar" class="w-4 h-4">
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
 </DashboardLayout>
 
+<script>
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const productRows = document.querySelectorAll('.product-row');
+
+    searchInput?.addEventListener('input', (e) => {
+        const searchTerm = (e.target as HTMLInputElement).value.toLowerCase().trim();
+
+        productRows.forEach((row) => {
+            const productName = row.getAttribute('data-product-name') || '';
+            const matches = productName.includes(searchTerm);
+            (row as HTMLElement).style.display = matches ? '' : 'none';
+        });
+    });
+</script>

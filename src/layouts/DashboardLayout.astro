@@ -28,9 +28,9 @@ const navLinks = [
 		<meta name="color-scheme" content="light only">
 		<title>{title}</title>
 	</head>
-	<body class="flex flex-col h-screen">
+	<body class="flex min-h-screen">
 		<main class="bg-light-blue-dashboard h-full w-full flex">
-            <aside class="bg-white h-full min-w-72 p-6 flex flex-col gap-20 border-r border-gray-200">
+            <aside class="bg-white w-1/5 fixed top-0 left-0 h-screen max-h-dvh p-6 flex flex-col gap-20 border-r border-gray-200">
                 <section class="flex items-center gap-4">
                     <img src="/icons/logo.svg" alt="Logo" class="w-12"/>
                     
@@ -40,7 +40,7 @@ const navLinks = [
 					</div>
                 </section>
 
-				<nav class="flex flex-col justify-between h-screen">
+				<nav class="flex flex-col justify-between h-full">
 					<ul>
 						{navLinks.map(link => {
 							// Check if the current link is active
@@ -72,7 +72,8 @@ const navLinks = [
 				</nav>				
             </aside>
             
-			<div class="h-full w-full">
+			<!-- Page Content -->
+			<div class="min-h-screen w-4/5 ml-[20%] overflow-y-auto">
                 <slot />
             </div>
 		</main>

@@ -41,6 +41,9 @@
     .recipe-btn {
         @apply min-w-0 px-5 text-sm
     }
+    .dashboard-btn {
+        @apply bg-secondary px-4 py-3 text-white font-semibold w-fit rounded-3xl hover:bg-secondary/80 transition-colors
+    }
     .section-padding {
         @apply px-6 py-10 min-w-[300px] sm:p-12 md:p-16 lg:p-20 lg:px-28 xl:p-28 lg:min-h-[470px] 2xl:px-56 2xl:py-36;
     }
