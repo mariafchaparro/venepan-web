@@ -42,7 +42,7 @@
         @apply min-w-0 px-5 text-sm
     }
     .dashboard-btn {
-        @apply bg-secondary px-4 py-3 text-white font-semibold w-fit rounded-3xl hover:bg-secondary/80 transition-colors
+        @apply bg-secondary px-4 py-3 text-white font-semibold w-fit rounded-3xl hover:bg-secondary/80 transition-colors cursor-pointer
     }
     .section-padding {
         @apply px-6 py-10 min-w-[300px] sm:p-12 md:p-16 lg:p-20 lg:px-28 xl:p-28 lg:min-h-[470px] 2xl:px-56 2xl:py-36;
@@ -75,7 +75,7 @@
     details[open] summary {
         background: url('/icons/chevron-up-gray.svg') no-repeat right 50%;
         background-size: 20px;
-    } 
+    }
 }
 
 html {
@@ -87,4 +87,5 @@ html, body {
   padding: 0;
   box-sizing: border-box; 
   overflow-x: hidden;
+  
 }

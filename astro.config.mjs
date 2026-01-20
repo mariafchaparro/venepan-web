@@ -8,7 +8,14 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-
+  image: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
+      },
+    ],
+  },
   integrations: [preact()],
  
   adapter: vercel(),

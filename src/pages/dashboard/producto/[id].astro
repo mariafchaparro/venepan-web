@@ -1,0 +1,452 @@
+---
+import DashboardLayout from '../../../layouts/DashboardLayout.astro';
+import { actions } from "astro:actions";
+import type { Product } from "../../../actions/products";
+import type { Category } from "../../../actions/categories";
+
+export const prerender = false;
+
+const { id } = Astro.params;
+const isEditMode = id !== "nuevo";
+
+// Cargar categorías
+let categories: Category[] = [];
+let categoriesError = "";
+
+const { data: categoriesData, error: catError } = await Astro.callAction(
+    actions.categories.getCategories,
+    {},
+);
+
+if (catError) {
+    categoriesError = "No se pudieron cargar las categorías";
+} else {
+    categories = categoriesData || [];
+}
+
+// Cargar producto si estamos en modo edición
+let product: Product | null = null;
+let productError = "";
+
+if (isEditMode) {
+    const { data: productData, error: prodError } = await Astro.callAction(
+        actions.products.getProductById,
+        { id: id as string },
+    );
+
+    if (prodError) {
+        productError = "No se pudo cargar el producto";
+    } else {
+        product = productData;
+    }
+}
+
+// Preparar beneficios como string separado por comas para el formulario
+const beneficiosString = product?.sgp_m_beneficios
+    ?.map(b => b.descripcion_beneficio)
+    .join(', ') || '';
+
+const pageTitle = isEditMode ? 'Editar producto' : 'Añadir producto';
+const pageDescription = isEditMode 
+    ? 'Modifica los datos del producto seleccionado.'
+    : 'Crea y añade un nuevo producto al catálogo web de Venepan. Los datos ingresados aquí se mostrarán en la sección de detalles del producto.';
+---
+
+<DashboardLayout currentPath='/dashboard/gestionar-productos', title={`Dashboard | ${pageTitle}`}>
+    <section class="flex flex-col p-12">
+        <div class="flex items-center gap-2 mb-4">
+            <img src="/icons/chevron-left.svg" alt="Flecha atrás" class="w-4" />
+            <a href="/dashboard/gestionar-productos" class="text-gray-600 text-sm hover:underline">Volver</a>
+        </div>
+
+        <h1 class="main-title text-4xl mb-2 max-w-[800px]">{pageTitle}</h1>
+        <p class="text max-w-[70ch] text-gray-600">{pageDescription}</p>
+
+        {(categoriesError || productError) && (
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
+                <p>{categoriesError || productError}</p>
+            </div>
+        )}
+
+        <!-- Error container para errores del formulario -->
+        <div id="form-errors" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
+            <ul id="error-list" class="list-disc list-inside"></ul>
+        </div>
+
+        <!-- Success message -->
+        <div id="success-message" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mt-4">
+            <p>Producto guardado exitosamente. Redirigiendo...</p>
+        </div>
+        
+        <form id="product-form" class="mt-6 w-[1000px] flex bg-white p-7 rounded-3xl card-shadow border border-gray-200 gap-7 items-stretch h-[490px]">
+            <!-- Hidden field para el ID del producto (solo en modo edición) -->
+            {isEditMode && <input type="hidden" id="id_producto" name="id_producto" value={product?.id_producto || ''} />}
+            
+            <section class="flex flex-col gap-4 h-full w-1/2">
+                <div class="flex flex-col gap-2">
+                    <label for="nombre_producto" class="block text-sm font-medium text-gray-700">Nombre</label>
+                    <input 
+                        type="text" 
+                        id="nombre_producto" 
+                        name="nombre_producto" 
+                        placeholder="Nombre del producto" 
+                        value={product?.nombre_producto || ''}
+                        required 
+                        class="bg-slate-50 w-full text-gray-800 placeholder:text-sm border px-3 py-3 border-gray-300 rounded-2xl focus:ring-1 focus:ring-gray-300 focus:outline-none"
+                    >
+                </div>
+
+                <div class="flex justify-between items-center gap-4">
+                    <div class="flex flex-col gap-2 w-1/2">
+                        <label for="id_categoria" class="block text-sm font-medium text-gray-700">Categoría</label>
+                        <select 
+                            name="id_categoria" 
+                            id="id_categoria" 
+                            required 
+                            class="bg-slate-50 w-full text-gray-800 border px-3 py-3 border-gray-300 rounded-2xl focus:ring-1 focus:ring-gray-300 focus:outline-none"
+                        >
+                            {categories.map((cat) => (
+                                <option 
+                                    value={cat.id_categorias} 
+                                    selected={product?.id_categoria === cat.id_categorias}
+                                >
+                                    {cat.nombre_categoria}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-2 w-1/2">
+                        <label for="peso_producto" class="block text-sm font-medium text-gray-700">Peso (gramos)</label>
+                        <input 
+                            type="number" 
+                            id="peso_producto" 
+                            name="peso_producto" 
+                            placeholder="Peso del producto en gramos" 
+                            value={product?.peso_producto || ''}
+                            required 
+                            class="bg-slate-50 w-full placeholder:text-sm text-gray-800 border px-3 py-3 border-gray-300 rounded-2xl focus:ring-1 focus:ring-gray-300 focus:outline-none"
+                        >
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label for="descripcion_producto" class="block text-sm font-medium text-gray-700">Descripción</label>
+                    <textarea 
+                        name="descripcion_producto" 
+                        id="descripcion_producto" 
+                        rows="3" 
+                        placeholder="Descripción del producto" 
+                        required 
+                        class="bg-slate-50 w-full text-gray-800 placeholder:text-sm border px-3 py-3 border-gray-300 rounded-2xl focus:ring-1 focus:ring-gray-300 focus:outline-none resize-none"
+                    >{product?.descripcion_producto || ''}</textarea>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label for="beneficios" class="block text-sm font-medium text-gray-700">Beneficios</label>
+                    <textarea 
+                        name="beneficios" 
+                        id="beneficios" 
+                        rows="2" 
+                        placeholder="Ingresa los beneficios del producto separados por comas. Ejemplo: Saludable, Bajo en grasas, Bajo en azúcares." 
+                        required 
+                        class="bg-slate-50 w-full text-gray-800 placeholder:text-sm border px-3 py-3 border-gray-300 rounded-2xl focus:ring-1 focus:ring-gray-300 focus:outline-none resize-none"
+                    >{beneficiosString}</textarea>
+                </div>
+            </section>
+
+            <section class="flex flex-col w-1/2 gap-6">
+                <div class="flex flex-col gap-2 flex-grow">
+                    <label class="block text-sm font-medium text-gray-700">Imagen</label>
+                    <label 
+                        for="imagen_file" 
+                        id="dropzone"
+                        class="dropzone bg-slate-50 w-full h-full flex flex-col items-center justify-center text-center cursor-pointer border-2 border-gray-300 border-dashed rounded-2xl transition-all hover:border-gray-400 hover:bg-slate-100 overflow-hidden"
+                    >
+                        <input type="file" id="imagen_file" name="imagen_file" accept="image/*" class="hidden">
+                        <!-- Hidden input para la URL de la imagen -->
+                        <input type="hidden" id="imagen_producto" name="imagen_producto" value={product?.imagen_producto || ''}>
+                        
+                        <div id="dropzone-text" class={`text-gray-400 px-6 flex flex-col gap-3 items-center ${product?.imagen_producto ? 'hidden' : ''}`}>
+                            <p class="max-w-[30ch]"><span class="font-semibold text-gray-500">Haz click</span> para subir una foto o <span class="font-semibold text-gray-500">arrástrala</span> hasta el cuadro.</p>
+                            <p class="text-sm max-w-[40ch]">La imagen del producto no debe tener fondo, debe tener un tamaño de 492px de alto y un formato webp.</p>
+                        </div>
+                        <img 
+                            id="preview-image" 
+                            class={`h-48 w-48 object-contain rounded-xl p-2 ${product?.imagen_producto ? '' : 'hidden'}`}
+                            src={product?.imagen_producto || ''} 
+                            alt="Preview"
+                        >
+                    </label>
+                </div>
+                <div class="flex gap-2 justify-end">
+                    <button type="submit" id="submit-btn" class="dashboard-btn">
+                        {isEditMode ? 'Guardar cambios' : 'Guardar producto'}
+                    </button>
+                    <a href="/dashboard/gestionar-productos" class="dashboard-btn bg-white hover:bg-gray-100 text-gray-700 border border-gray-300">Cancelar</a>
+                </div>
+            </section>
+        </form>
+    </section>
+</DashboardLayout>
+
+<script>
+    import { actions } from "astro:actions";
+
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('imagen_file');
+    const dropzoneText = document.getElementById('dropzone-text');
+    const previewImage = document.getElementById('preview-image');
+    const form = document.getElementById('product-form');
+    const formErrors = document.getElementById('form-errors');
+    const errorList = document.getElementById('error-list');
+    const successMessage = document.getElementById('success-message');
+    const submitBtn = document.getElementById('submit-btn');
+    const imagenProductoInput = document.getElementById('imagen_producto');
+    const idProductoInput = document.getElementById('id_producto');
+
+    // Recuperar isEditMode basado en la existencia del input hidden
+    const isEditMode = idProductoInput !== null;
+
+    if (dropzone && fileInput && dropzoneText && previewImage) {
+        // Prevenir comportamiento default del navegador
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        });
+
+        // Efecto visual al arrastrar sobre la zona
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, () => {
+                dropzone.classList.add('border-blue-400', 'bg-blue-50');
+                dropzone.classList.remove('border-gray-300', 'bg-slate-50');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, () => {
+                dropzone.classList.remove('border-blue-400', 'bg-blue-50');
+                dropzone.classList.add('border-gray-300', 'bg-slate-50');
+            });
+        });
+
+        // Manejar el drop
+        dropzone.addEventListener('drop', (e) => {
+            const files = e.dataTransfer?.files;
+            if (files && files.length > 0 && files[0].type.startsWith('image/')) {
+                // @ts-ignore
+                fileInput.files = files;
+                showPreview(files[0]);
+            }
+        });
+
+        // Manejar selección por click
+        fileInput.addEventListener('change', () => {
+            // @ts-ignore
+            if (fileInput.files && fileInput.files.length > 0) {
+                // @ts-ignore
+                showPreview(fileInput.files[0]);
+            }
+        });
+
+        function showPreview(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if (e.target?.result && previewImage && dropzoneText) {
+                    // @ts-ignore
+                    previewImage.src = e.target.result;
+                    previewImage.classList.remove('hidden');
+                    dropzoneText.classList.add('hidden');
+                    
+                    // Asegurar que si hay una imagen, el input hidden tenga valor (aunque sea temporal)
+                    // para pasar la validación visual si se requiere
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Validación del formulario
+    function validateForm() {
+        const errors = [];
+        
+        // @ts-ignore
+        const nombre = document.getElementById('nombre_producto')?.value?.trim() || '';
+        // @ts-ignore
+        const peso = parseFloat(document.getElementById('peso_producto')?.value || '0');
+        // @ts-ignore
+        const descripcion = document.getElementById('descripcion_producto')?.value?.trim() || '';
+        // @ts-ignore
+        const beneficios = document.getElementById('beneficios')?.value?.trim() || '';
+        // @ts-ignore
+        const categoria = document.getElementById('id_categoria')?.value || '';
+        // @ts-ignore
+        const imagenUrl = imagenProductoInput?.value || '';
+        // @ts-ignore
+        const imagenFile = fileInput?.files?.[0];
+
+        if (nombre.length < 3) {
+            errors.push('El nombre debe tener al menos 3 caracteres');
+        }
+
+        if (peso <= 0 || isNaN(peso)) {
+            errors.push('El peso debe ser mayor a 0');
+        }
+
+        if (descripcion.length < 10) {
+            errors.push('La descripción debe tener al menos 10 caracteres');
+        }
+
+        if (beneficios.length < 5) {
+            errors.push('Ingresa al menos un beneficio');
+        }
+
+        if (!categoria) {
+            errors.push('Selecciona una categoría válida');
+        }
+
+        // Validación de imagen:
+        // En crear: Obligatorio tener archivo O URL (placeholder por defecto)
+        // En editar: No es obligatorio archivo nuevo si ya hay URL
+        const hasImage = !!imagenFile || (imagenUrl && imagenUrl.length > 0);
+        
+        if (!hasImage) {
+            errors.push('La imagen es obligatoria');
+        }
+
+        return errors;
+    }
+
+    function showErrors(errors) {
+        if (errors.length > 0 && formErrors && errorList) {
+            errorList.innerHTML = errors.map(err => `<li>${err}</li>`).join('');
+            formErrors.classList.remove('hidden');
+        } else if (formErrors) {
+            formErrors.classList.add('hidden');
+        }
+    }
+
+    // Manejar envío del formulario
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const errors = validateForm();
+            showErrors(errors);
+            
+            if (errors.length > 0) {
+                return;
+            }
+
+            // Deshabilitar botón mientras se procesa
+            if (submitBtn) {
+                // @ts-ignore
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Procesando...';
+            }
+
+            try {
+                // Preparar datos del formulario
+                const currentImagenUrl = 
+                    // @ts-ignore
+                    imagenProductoInput?.value || 
+                    'https://placehold.co/400x400/png?text=Producto';
+
+                const formData = {
+                    // @ts-ignore
+                    nombre_producto: document.getElementById('nombre_producto')?.value?.trim(),
+                    // @ts-ignore
+                    peso_producto: parseFloat(document.getElementById('peso_producto')?.value || '0'),
+                    // @ts-ignore
+                    descripcion_producto: document.getElementById('descripcion_producto')?.value?.trim(),
+                    // @ts-ignore
+                    beneficios: document.getElementById('beneficios')?.value?.trim(),
+                    // @ts-ignore
+                    id_categoria: document.getElementById('id_categoria')?.value,
+                    imagen_producto: currentImagenUrl
+                };
+
+                // Subir imagen SOLO si se seleccionó una nueva
+                // @ts-ignore
+                const imagenFile = fileInput?.files?.[0];
+                
+                if (imagenFile) {
+                    if (submitBtn) submitBtn.textContent = 'Subiendo imagen...';
+                    
+                    // Convertir file a base64
+                    const reader = new FileReader();
+                    const base64Promise = new Promise((resolve, reject) => {
+                        reader.onload = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(imagenFile);
+                    });
+
+                    // @ts-ignore
+                    const base64Data = await base64Promise;
+
+                    // Subir a Supabase usando Client SDK
+                    const { data, error } = await actions.products.uploadProductImage({
+                        imageData: base64Data as string,
+                        productName: formData.nombre_producto || 'producto-sin-nombre'
+                    });
+
+                    if (error) {
+                        throw new Error(error.message || 'Error al subir la imagen');
+                    }
+
+                    if (!data || !data.url) {
+                        throw new Error('No se recibió la URL de la imagen');
+                    }
+
+                    formData.imagen_producto = data.url;
+                }
+                
+                if (submitBtn) submitBtn.textContent = 'Guardando producto...';
+
+                let result;
+                
+                if (isEditMode) {
+                    // Actualizar producto
+                    // @ts-ignore
+                    const idProducto = idProductoInput?.value;
+                    result = await actions.products.updateProduct({
+                        ...formData,
+                        id_producto: idProducto
+                    });
+                } else {
+                    // Crear producto
+                    result = await actions.products.createProduct(formData);
+                }
+
+                if (result.error) {
+                    throw new Error(result.error.message || 'Error al guardar el producto');
+                }
+
+                // Mostrar mensaje de éxito
+                if (successMessage) {
+                    successMessage.classList.remove('hidden');
+                }
+                if (formErrors) {
+                    formErrors.classList.add('hidden');
+                }
+
+                // Redirigir después de 1.5 segundos
+                setTimeout(() => {
+                    window.location.href = '/dashboard/gestionar-productos';
+                }, 1500);
+
+            } catch (error) {
+                 // @ts-ignore
+                showErrors([error.message || 'Ocurrió un error al guardar el producto']);
+                console.error(error);
+                
+                if (submitBtn) {
+                     // @ts-ignore
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = isEditMode ? 'Guardar cambios' : 'Guardar producto';
+                }
+            }
+        });
+    }
+</script>

@@ -1,6 +1,7 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
 import Image from 'astro/components/Image.astro';
+import ConfirmationModal from '../../components/ui/ConfirmationModal.astro';
 import { actions } from "astro:actions";
 import type { Product as ProductType } from "../../actions/products";
 
@@ -47,8 +48,8 @@ if (error) {
         </div>
 
         <div class="flex justify-between items-center mb-6">
-            <input type="text" id="search-input" placeholder="Buscar producto..." class="input input-bordered w-full max-w-xs text-gray-800 border px-3 py-3 border-gray-300 rounded-2xl focus:ring-2 focus:ring-gray-300 focus:outline-none">
-            <button class="dashboard-btn">Añadir Producto</button>
+            <input type="text" id="search-input" placeholder="Buscar producto..." class="input input-bordered bg-white w-full max-w-xs text-gray-800 border px-3 py-3 border-gray-300 rounded-2xl focus:ring-2 focus:ring-gray-300 focus:outline-none">
+            <a href="/dashboard/producto/nuevo" class="dashboard-btn">Añadir producto</a>
         </div>  
 
         {
@@ -89,7 +90,7 @@ if (error) {
                         </th>
                     </tr>
                 </thead>
-                <tbody id="products-table-body"> 
+                <tbody id="products-table-body">
                     {
                         products.map((product) => (
                             <tr class="hover:bg-slate-50 product-row" data-product-name={product.nombre_producto.toLowerCase()}>
@@ -116,7 +117,7 @@ if (error) {
                                                     ? 'bg-green-100 text-green-500'
                                                     : 'bg-gray-100 text-gray-500'
                                     }`}>
-                                        {product.sgp_m_categorias?.nombre_categoria}
+                                        {product.sgp_m_categorias?.nombre_categoria || 'Sin categoría'}
                                     </div>
                                 </td>
                                 <td class="p-4 border-b border-slate-200">
@@ -125,13 +126,18 @@ if (error) {
                                     </p>
                                 </td>
                                 <td class="p-4 border-b border-slate-200">
-                                    <div class="flex items-center gap-2">
-                                        <a href="/dashboard/gestionar-productos/editar-producto" class="hover:bg-slate-200 p-2 rounded-full">
-                                            <img src="/icons/edit.svg" alt="Editar" class="w-4 h-4">
+                                    <div class="flex gap-2">
+                                        <a href={`/dashboard/producto/${product.id_producto}`} class="p-2 hover:bg-slate-100 rounded-lg transition-colors group relative" title="Editar">
+                                            <img src="/icons/edit.svg" alt="Editar" class="w-4 h-4" />
                                         </a>
-                                        <a href="/dashboard/gestionar-productos/eliminar-producto" class="hover:bg-slate-200 p-2 rounded-full">
-                                            <img src="/icons/delete.svg" alt="Eliminar" class="w-4 h-4">
-                                        </a>
+                                        <button 
+                                            class="p-2 hover:bg-red-50 rounded-lg transition-colors group relative delete-btn" 
+                                            title="Eliminar"
+                                            data-id={product.id_producto}
+                                            data-name={product.nombre_producto}
+                                        >
+                                            <img src="/icons/delete.svg" alt="Eliminar" class="w-4 h-4" />
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -141,19 +147,85 @@ if (error) {
             </table>
         </div>
     </section>
+
+    <ConfirmationModal 
+        id="delete_product_modal"
+        title="Eliminar producto"
+        message="¿Estás seguro de que deseas eliminar este producto? Esta acción eliminará permanentemente el producto y su imagen asociada."
+        confirmText="Sí, eliminar"
+        cancelText="Cancelar"
+    />
+
 </DashboardLayout>
 
 <script>
-    const searchInput = document.getElementById('search-input') as HTMLInputElement;
-    const productRows = document.querySelectorAll('.product-row');
+    import { actions } from "astro:actions";
+
+    // Búsqueda en tiempo real
+    const searchInput = document.getElementById('search-input');
+    const tableBody = document.getElementById('products-table-body');
 
     searchInput?.addEventListener('input', (e) => {
-        const searchTerm = (e.target as HTMLInputElement).value.toLowerCase().trim();
+        // @ts-ignore
+        const searchTerm = e.target.value.toLowerCase().trim();
+        const rows = tableBody?.getElementsByClassName('product-row');
 
-        productRows.forEach((row) => {
-            const productName = row.getAttribute('data-product-name') || '';
-            const matches = productName.includes(searchTerm);
-            (row as HTMLElement).style.display = matches ? '' : 'none';
+        if (rows) {
+            Array.from(rows).forEach((row) => {
+                // @ts-ignore
+                const productName = row.dataset.productName || '';
+                if (productName.includes(searchTerm)) {
+                    // @ts-ignore
+                    row.style.display = '';
+                } else {
+                    // @ts-ignore
+                    row.style.display = 'none';
+                }
+            });
+        }
+    });
+
+    // Manejo de eliminación con Modal
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+             // @ts-ignore
+             const productId = button.dataset.id;
+             // @ts-ignore
+             const productName = button.dataset.name;
+
+             const message = productName 
+                ? `¿Estás seguro de que deseas eliminar el producto "${productName}"? Esta acción eliminará permanentemente el producto y su imagen asociada.`
+                : undefined;
+
+             // @ts-ignore
+             if (window.openModal_delete_product_modal) {
+                 // @ts-ignore
+                 window.openModal_delete_product_modal(async () => {
+                     if (!productId) return;
+                     
+                     // Cambiar cursor a wait
+                     document.body.style.cursor = 'wait';
+                     
+                     try {
+                        // @ts-ignore
+                         const { error } = await actions.products.deleteProduct({ id: productId });
+                         
+                         if (error) {
+                             alert(`Error al eliminar: ${error.message}`);
+                         } else {
+                             // Recargar página para mostrar cambios
+                             window.location.reload();
+                         }
+                     } catch (err) {
+                         console.error(err);
+                         alert('Ocurrió un error inesperado');
+                     } finally {
+                         document.body.style.cursor = 'default';
+                     }
+                 }, message);
+             }
         });
     });
 </script>
