@@ -1,7 +1,126 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
----
-<DashboardLayout currentPath='/dashboard/mensajes-clientes', title='Dashboard | Mensajes de Clientes'>
-    <h1>Mensajes de Clientes</h1>
-</DashboardLayout>
+import { actions } from "astro:actions";
+import type { Message } from "../../actions/messages";
 
+let messages: Message[] = [];
+
+let hasError = false;
+let errorMessage = "";
+
+const { data, error } = await Astro.callAction(
+    actions.messages.getMessages,
+    {},
+);
+
+if (error) {
+    hasError = true;
+
+    // Manejar según el código de error
+    switch (error.code) {
+        case "BAD_REQUEST":
+            errorMessage =
+                "Error al conectar con la base de datos. Por favor, recarga la página.";
+            break;
+        case "NOT_FOUND":
+            errorMessage = "No hay mensajes disponibles en este momento.";
+            break;
+        case "INTERNAL_SERVER_ERROR":
+            errorMessage =
+                "Ocurrió un error en el servidor. Por favor, intenta más tarde.";
+            break;
+        default:
+            errorMessage = "Ocurrió un error inesperado.";
+    }
+    console.error("Error de Action:", error.message);
+} else {
+    messages = data || [];
+}
+
+
+---
+<DashboardLayout currentPath='/dashboard/mensajes-clientes', title='Dashboard | Mensajes de clientes'>
+    <section class="flex flex-col p-12">
+        <div class="mb-6">
+            <h1 class="main-title text-4xl mb-2">Mensajes de clientes</h1>
+            <p class="text text-gray-600 max-w-[70ch]">Accede a los mensajes enviados por los clientes a través del formulario de contacto de la web.</p>
+        </div>
+        
+        {
+            hasError && (
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <p>{errorMessage}</p>
+                </div>
+            )
+        }
+
+        <div class="flex gap-4">
+            <div class="relative flex flex-col h-full w-full overflow-y-auto text-gray-800 bg-white shadow-md rounded-lg bg-clip-border">
+                <table class="text-left table-auto">
+                    <thead>
+                        <tr>
+                            <th class="p-4 border-b  border-slate-300 bg-gray-100">
+                                <p class="block text-sm font-medium leading-none text-gray-600">
+                                    Nombre
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-300 bg-gray-100">
+                                <p class="block text-sm font-medium leading-none text-gray-600">
+                                    Telefono
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-300 bg-gray-100">
+                                <p class="block text-sm font-medium leading-none text-gray-600">
+                                    Email
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-300 bg-gray-100">
+                                <p class="block text-sm font-medium leading-none text-gray-600">
+                                    Mensaje
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-300 bg-gray-100">
+                                <p class="block text-sm font-medium leading-none text-gray-600">
+                                    Fecha
+                                </p>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="categories-table-body">
+                        {
+                            messages.map((message) => (
+                                <tr class="hover:bg-slate-50 category-row">
+                                    <td class="p-4 border-b border-slate-200">
+                                        <p class="block font-medium text-gray-800 min-w-[15ch]">
+                                            {message.nombre_cliente}
+                                        </p>
+                                    </td>
+                                    <td class="p-4 border-b border-slate-200">
+                                        <p class="block text-sm text-gray-600 max-w-[80ch]">
+                                            {message.telefono_cliente}
+                                        </p>
+                                    </td>
+                                    <td class="p-4 border-b border-slate-200">
+                                        <p class="block text-sm text-gray-600 max-w-[80ch]">
+                                            {message.correo_cliente}
+                                        </p>
+                                    </td>
+                                    <td class="p-4 border-b border-slate-200">
+                                        <p class="block text-sm text-gray-600 max-w-[80ch]">
+                                            {message.mensaje_cliente}
+                                        </p>
+                                    </td>
+                                    <td class="p-4 border-b border-slate-200">
+                                        <p class="block text-sm text-gray-600 max-w-[80ch]">
+                                            {message.fecha_contacto}
+                                        </p>
+                                    </td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</DashboardLayout>

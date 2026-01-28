@@ -1,7 +1,175 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import ConfirmationModal from '../../components/ui/ConfirmationModal.astro';
+import { actions } from "astro:actions";
+import type { Category as CategoryType } from "../../actions/categories";
+
+let categories: CategoryType[] = [];
+
+let hasError = false;
+let errorMessage = "";
+
+const { data, error } = await Astro.callAction(
+    actions.categories.getCategories,
+    {},
+);
+
+if (error) {
+    hasError = true;
+
+    // Manejar según el código de error
+    switch (error.code) {
+        case "BAD_REQUEST":
+            errorMessage =
+                "Error al conectar con la base de datos. Por favor, recarga la página.";
+            break;
+        case "NOT_FOUND":
+            errorMessage = "No hay categorias disponibles en este momento.";
+            break;
+        case "INTERNAL_SERVER_ERROR":
+            errorMessage =
+                "Ocurrió un error en el servidor. Por favor, intenta más tarde.";
+            break;
+        default:
+            errorMessage = "Ocurrió un error inesperado.";
+    }
+    console.error("Error de Action:", error.message);
+} else {
+    categories = data || [];
+}
+
 ---
-<DashboardLayout currentPath='/dashboard/gestionar-categorias', title='Dashboard | Gestionar Categorías'>
-    <h1>Gestionar Categorías</h1>
+<DashboardLayout currentPath='/dashboard/gestionar-categorias', title='Dashboard | Gestionar Categorias'>
+    <section class="flex flex-col p-12">
+        <div class="mb-6">
+            <h1 class="main-title text-4xl mb-2">Gestión de Categorías</h1>
+            <p class="text text-gray-600 max-w-[70ch]">Añade, modifica y elimina las categorías de producto que ofrece Venepan. Estas categorías organizan los productos mostrados en la web de Venepan</p>
+        </div>
+        
+        {
+            hasError && (
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <p>{errorMessage}</p>
+                </div>
+            )
+        }
+
+        <div class="flex gap-4">
+            <div class="relative flex flex-col h-full w-3/4 overflow-y-auto text-gray-800 bg-white shadow-md rounded-lg bg-clip-border">
+                <table class="text-left table-auto">
+                    <thead>
+                        <tr>
+                            <th class="p-4 border-b  border-slate-300 bg-gray-100">
+                                <p class="block text-sm font-medium leading-none text-gray-600">
+                                    Nombre
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-300 bg-gray-100">
+                                <p class="block text-sm font-medium leading-none text-gray-600">
+                                    Descripción
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-300 bg-gray-100">
+                                <p class="block text-sm font-medium leading-none text-gray-600">Acciones</p>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="categories-table-body">
+                        {
+                            categories.map((category) => (
+                                <tr class="hover:bg-slate-50 category-row" data-category-name={category.nombre_categoria.toLowerCase()}>
+                                    <td class="p-4 border-b border-slate-200">
+                                        <p class="block  font-medium text-gray-800">
+                                            {category.nombre_categoria}
+                                        </p>
+                                    </td>
+                                    <td class="p-4 border-b border-slate-200">
+                                        <p class="block text-sm text-gray-600 max-w-[80ch]">
+                                            {category.descripcion_categoria}
+                                        </p>
+                                    </td>
+                                    <td class="p-4 border-b border-slate-200">
+                                        <div class="flex gap-2">
+                                            <a href={`/dashboard/categoria/${category.id_categorias}`} class="p-2 hover:bg-slate-100 rounded-lg transition-colors group relative" title="Editar">
+                                                <img src="/icons/edit.svg" alt="Editar" class="w-4 h-4" />
+                                            </a>
+                                            <button 
+                                                class="p-2 hover:bg-red-50 rounded-lg transition-colors group relative delete-btn cursor-pointer" 
+                                                title="Eliminar"
+                                                data-id={category.id_categorias}
+                                                data-name={category.nombre_categoria}
+                                            >
+                                                <img src="/icons/delete.svg" alt="Eliminar" class="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <a href="/dashboard/categoria/nuevo" class="dashboard-btn w-fit h-fit">Añadir categoría</a>
+        </div>
+
+    </section>
+
+    <ConfirmationModal 
+        id="delete_category_modal"
+        title="Eliminar categoría de producto"
+        message="¿Estás seguro de que deseas eliminar esta categoría de producto? Esta acción es irreversible."
+        confirmText="Sí, eliminar"
+        cancelText="Cancelar"
+    />
+
 </DashboardLayout>
 
+<script>
+    import { actions } from "astro:actions";
+
+    // Manejo de eliminación con Modal
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // @ts-ignore
+            const categoryId = button.dataset.id;
+            
+            // @ts-ignore
+            const categoryName = button.dataset.name;
+
+            const message = categoryName 
+                ? `¿Estás seguro de que deseas eliminar la categoría "${categoryName}"? Esta acción eliminará permanentemente la categoría.`
+                : undefined;
+
+             // @ts-ignore
+             if (window.openModal_delete_category_modal) {
+                 // @ts-ignore
+                 window.openModal_delete_category_modal(async () => {
+                    if (!categoryId) return;
+                     
+                    // Cambiar cursor a wait
+                    document.body.style.cursor = 'wait';
+                     
+                    try {
+                        // @ts-ignore
+                        const { error } = await actions.categories.deleteCategory({ id_categorias: categoryId });
+                         
+                        if (error) {
+                            console.log(`Error al eliminar: ${error.message}`);
+                        } else {
+                            // Recargar página para mostrar cambios
+                            window.location.reload();
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        console.log('Ocurrió un error inesperado');
+                    } finally {
+                        document.body.style.cursor = 'default';
+                    }
+                 }, message);
+             }
+        });
+    });
+</script>

@@ -1,0 +1,219 @@
+---
+import DashboardLayout from '../../../layouts/DashboardLayout.astro';
+import { actions } from "astro:actions";
+import type { Category } from "../../../actions/categories";
+
+export const prerender = false;
+
+const { id } = Astro.params;
+const isEditMode = id !== "nuevo";
+
+// Cargar categoria si estamos en modo edición
+let category: Category | null = null;
+let categoryError = "";
+
+if (isEditMode) {
+    const { data: categoryData, error: catError } = await Astro.callAction(
+        actions.categories.getCategoryById,
+        { id: id as string },
+    );
+
+    if (catError) {
+        categoryError = "No se pudo cargar la categoría";
+    } else {
+        category = categoryData;
+    }
+}
+
+const pageTitle = isEditMode ? 'Editar categoría' : 'Añadir categoría';
+const pageDescription = isEditMode 
+    ? 'Modifica los datos de la categoría seleccionada.'
+    : 'Crea y añade una nueva categoría al catálogo web de Venepan.';
+---
+
+<DashboardLayout currentPath='/dashboard/gestionar-productos', title={`Dashboard | ${pageTitle}`}>
+    <section class="flex flex-col p-12">
+        <div class="flex items-center gap-2 mb-4">
+            <img src="/icons/chevron-left.svg" alt="Flecha atrás" class="w-4" />
+            <a href="/dashboard/gestionar-productos" class="text-gray-600 text-sm hover:underline">Volver</a>
+        </div>
+
+        <h1 class="main-title text-4xl mb-2 max-w-[800px]">{pageTitle}</h1>
+        <p class="text max-w-[70ch] text-gray-600">{pageDescription}</p>
+
+        {(categoryError) && (
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
+                <p>{categoryError}</p>
+            </div>
+        )}
+
+        <!-- Mensaje de error -->
+        <div id="form-errors" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4">
+            <ul id="error-list" class="list-disc list-inside"></ul>
+        </div>
+
+        <!-- Mensaje de éxito -->
+        <div id="success-message" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mt-4">
+            <p>Categoría guardada exitosamente. Redirigiendo...</p>
+        </div>
+        
+        <form id="category-form" class="w-[1000px] mt-6 flex bg-white p-7 rounded-3xl card-shadow border border-gray-200 gap-7 items-stretch">
+            <!-- Hidden field para el ID de la categoría (solo en modo edición) -->
+            {isEditMode && <input type="hidden" id="id_categoria" name="id_categoria" value={category?.id_categorias || ''} />}
+            
+            <div class="flex flex-col gap-2 w-1/2">
+                <label for="nombre_categoria" class="block text-sm font-medium text-gray-700">Nombre</label>
+                <input 
+                    type="text" 
+                    id="nombre_categoria" 
+                    name="nombre_categoria" 
+                    placeholder="Nombre de la categoría" 
+                    value={category?.nombre_categoria || ''}
+                    required 
+                    class="bg-slate-50 w-full text-gray-800 placeholder:text-sm border px-3 py-3 border-gray-300 rounded-2xl focus:ring-1 focus:ring-gray-300 focus:outline-none"
+                >
+            </div>
+
+            <section class="flex flex-col gap-6 w-1/2">
+                <div class="flex flex-col gap-2">
+                    <label for="descripcion_categoria" class="block text-sm font-medium text-gray-700">Descripción</label>
+                    <textarea 
+                        name="descripcion_categoria" 
+                        id="descripcion_categoria" 
+                        rows="4" 
+                        placeholder="Descripción de la categoría" 
+                        required 
+                        class="bg-slate-50 w-full text-gray-800 placeholder:text-sm border px-3 py-3 border-gray-300 rounded-2xl focus:ring-1 focus:ring-gray-300 focus:outline-none resize-none"
+                    >{category?.descripcion_categoria || ''}</textarea>
+                </div>
+
+                <div class="flex gap-2 justify-end">
+                    <button type="submit" id="submit-btn" class="dashboard-btn">
+                        {isEditMode ? 'Guardar cambios' : 'Guardar categoría'}
+                    </button>
+                    <a href="/dashboard/gestionar-categorias" class="dashboard-btn bg-white hover:bg-gray-100 text-gray-700 border border-gray-300">Cancelar</a>
+                </div>
+            </section>
+        </form>
+    </section>
+</DashboardLayout>
+
+<script>
+    import { actions } from "astro:actions";
+
+    const form = document.getElementById('category-form');
+    const formErrors = document.getElementById('form-errors');
+    const errorList = document.getElementById('error-list');
+    const successMessage = document.getElementById('success-message');
+    const submitBtn = document.getElementById('submit-btn');
+    const idCategoriaInput = document.getElementById('id_categoria');
+
+    // Recuperar isEditMode basado en la existencia del input hidden
+    const isEditMode = idCategoriaInput !== null;
+
+
+    // Validación del formulario
+    function validateForm() {
+        const errors = [];
+        
+        // @ts-ignore
+        const nombre = document.getElementById('nombre_categoria')?.value?.trim() || '';
+        // @ts-ignore
+        const descripcion = document.getElementById('descripcion_categoria')?.value?.trim() || '';
+
+        if (nombre.length < 3) {
+            errors.push('El nombre debe tener al menos 3 caracteres');
+        }
+
+        if (descripcion.length < 10) {
+            errors.push('La descripción debe tener al menos 10 caracteres');
+        }
+
+        return errors;
+    }
+
+    function showErrors(errors) {
+        if (errors.length > 0 && formErrors && errorList) {
+            errorList.innerHTML = errors.map(err => `<li>${err}</li>`).join('');
+            formErrors.classList.remove('hidden');
+        } else if (formErrors) {
+            formErrors.classList.add('hidden');
+        }
+    }
+
+    // Manejar envío del formulario
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const errors = validateForm();
+            showErrors(errors);
+            
+            if (errors.length > 0) {
+                return;
+            }
+
+            // Deshabilitar botón mientras se procesa
+            if (submitBtn) {
+                // @ts-ignore
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Procesando...';
+            }
+
+            try {
+                // Preparar datos del formulario
+                const formData = {
+                    // @ts-ignore
+                    nombre_categoria: document.getElementById('nombre_categoria')?.value?.trim(),
+                    // @ts-ignore
+                    descripcion_categoria: document.getElementById('descripcion_categoria')?.value?.trim(),
+                };
+                
+                if (submitBtn) submitBtn.textContent = 'Guardando categoría...';
+
+                let result;
+                
+                if (isEditMode) {
+                    // Actualizar categoría
+                    // @ts-ignore
+                    const idCategoria = idCategoriaInput?.value;
+                    result = await actions.categories.updateCategory({
+                        ...formData,
+                        id_categorias: idCategoria
+                    });
+                } else {
+                    // Crear categoría
+                    result = await actions.categories.createCategory(formData);
+                }
+
+                if (result.error) {
+                    throw new Error(result.error.message || 'Error al guardar la categoría');
+                }
+
+                // Mostrar mensaje de éxito
+                if (successMessage) {
+                    successMessage.classList.remove('hidden');
+                }
+                if (formErrors) {
+                    formErrors.classList.add('hidden');
+                }
+
+                // Redirigir después de 1.5 segundos
+                setTimeout(() => {
+                    window.location.href = '/dashboard/gestionar-categorias';
+                }, 1500);
+
+            } catch (error) {
+                 // @ts-ignore
+                showErrors([error.message || 'Ocurrió un error al guardar la categoría']);
+                console.error(error);
+                
+                if (submitBtn) {
+                     // @ts-ignore
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = isEditMode ? 'Guardar cambios' : 'Guardar categoría';
+                }
+            }
+        });
+    }
+</script>
