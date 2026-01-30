@@ -40,9 +40,9 @@ if (error) {
 
 ---
 <DashboardLayout currentPath='/dashboard/mensajes-clientes', title='Dashboard | Mensajes de clientes'>
-    <section class="flex flex-col p-12">
+    <section class="flex flex-col p-4 md:p-12">
         <div class="mb-6">
-            <h1 class="main-title text-4xl mb-2">Mensajes de clientes</h1>
+            <h1 class="main-title text-2xl md:text-4xl mb-2">Mensajes de clientes</h1>
             <p class="text text-gray-600 max-w-[70ch]">Accede a los mensajes enviados por los clientes a través del formulario de contacto de la web.</p>
         </div>
         
@@ -55,8 +55,8 @@ if (error) {
         }
 
         <div class="flex gap-4">
-            <div class="relative flex flex-col h-full w-full overflow-y-auto text-gray-800 bg-white shadow-md rounded-lg bg-clip-border">
-                <table class="text-left table-auto">
+            <div class="relative flex flex-col h-full w-full overflow-x-auto text-gray-800 bg-white shadow-md rounded-lg bg-clip-border">
+                <table class="text-left table-auto min-w-full">
                     <thead>
                         <tr>
                             <th class="p-4 border-b  border-slate-300 bg-gray-100">

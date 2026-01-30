@@ -29,8 +29,23 @@ const navLinks = [
 		<title>{title}</title>
 	</head>
 	<body class="flex min-h-screen">
-		<main class="bg-light-blue-dashboard h-full w-full flex">
-            <aside class="bg-white w-1/5 fixed top-0 left-0 h-screen max-h-dvh p-6 flex flex-col gap-20 border-r border-gray-200">
+		<main class="bg-light-blue-dashboard h-full w-full flex relative">
+			<!-- Mobile Menu Button -->
+			<button 
+				id="mobile-menu-btn" 
+				class="md:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-gray-50"
+				aria-label="Toggle menu"
+			>
+				<svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+				</svg>
+			</button>
+
+			<!-- Mobile Overlay -->
+			<div id="mobile-overlay" class="md:hidden fixed inset-0 bg-gray-800/30 z-30 hidden"></div>
+
+			<!-- Sidebar -->
+            <aside id="sidebar" class="bg-white w-4/5 md:w-1/5 fixed top-0 -left-full md:left-0 h-screen max-h-dvh p-6 flex flex-col gap-20 border-r border-gray-200 z-40 transition-all duration-300 ease-in-out">
                 <section class="flex items-center gap-4">
                     <img src="/icons/logo.svg" alt="Logo" class="w-12"/>
                     
@@ -51,7 +66,7 @@ const navLinks = [
 									<a 
 										href={link.href} 
 										class:list={[
-											"text-sm text-gray-800 rounded-2xl block w-full px-4 py-3 cursor-pointer hover:bg-secondary/5 hover:rounded-xl hover:font-semibold hover:text-secondary", 
+											"nav-link text-sm text-gray-800 rounded-2xl block w-full px-4 py-3 cursor-pointer hover:bg-secondary/5 hover:rounded-xl hover:font-semibold hover:text-secondary", 
 											isActive && activeClass 
 										]}
 									>
@@ -73,13 +88,64 @@ const navLinks = [
             </aside>
             
 			<!-- Page Content -->
-			<div class="min-h-screen w-4/5 ml-[20%] overflow-y-auto">
+			<div class="min-h-screen w-full md:w-4/5 md:ml-[20%] overflow-y-auto">
                 <slot />
             </div>
 		</main>
 
 		<script>
-			const signoutBtn = document.getElementById('signout-btn');
+		// Mobile menu toggle
+		const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+		const sidebar = document.getElementById('sidebar');
+		const mobileOverlay = document.getElementById('mobile-overlay');
+		const navLinks = document.querySelectorAll('.nav-link');
+
+		function openMobileMenu() {
+			sidebar?.classList.remove('-left-full');
+			sidebar?.classList.add('left-0');
+			mobileOverlay?.classList.remove('hidden');
+			document.body.style.overflow = 'hidden';
+		}
+
+		function closeMobileMenu() {
+			sidebar?.classList.add('-left-full');
+			sidebar?.classList.remove('left-0');
+			mobileOverlay?.classList.add('hidden');
+			document.body.style.overflow = '';
+		}
+
+		// Toggle menu on button click
+		mobileMenuBtn?.addEventListener('click', () => {
+			const isOpen = sidebar?.classList.contains('left-0');
+			if (isOpen) {
+				closeMobileMenu();
+			} else {
+				openMobileMenu();
+			}
+		});
+
+		// Close menu when clicking overlay
+		mobileOverlay?.addEventListener('click', closeMobileMenu);
+
+		// Close menu when clicking nav links (on mobile)
+		navLinks.forEach(link => {
+			link.addEventListener('click', () => {
+				if (window.innerWidth < 768) {
+					closeMobileMenu();
+				}
+			});
+		});
+
+		// Close menu on window resize to desktop size
+		window.addEventListener('resize', () => {
+			if (window.innerWidth >= 768) {
+				closeMobileMenu();
+			}
+		});
+	</script>
+
+	<script>
+		const signoutBtn = document.getElementById('signout-btn');
 
 			signoutBtn?.addEventListener('click', async () => {
 				if (signoutBtn instanceof HTMLButtonElement) {

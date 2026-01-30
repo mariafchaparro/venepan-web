@@ -8,12 +8,12 @@ export const prerender = false;
 ---
 
 <DashboardLayout currentPath='/dashboard', title='Dashboard | Alimentos Venepan'>
-    <section class="flex flex-col p-12 items-center">
-        <h1 class="main-title text-4xl mb-8 max-w-[800px] text-center ">¡Bienvenido al sistema de gestión de productos de Venepan, <span class="text-4xl text-secondary">{email}</span>!</h1>
-        <p class="text max-w-[70ch] text-gray-600 text-center">En esta sección podrás gestionar el catálogo de productos que se muestra en la web de Venepan y acceder a los mensajes enviados a través del formulario de contacto.</p>
+    <section class="flex flex-col p-4 md:p-12 items-center">
+        <h1 class="main-title text-2xl md:text-4xl mb-8 max-w-[800px] text-center">¡Bienvenido al sistema de gestión de productos de Venepan, <span class="text-2xl md:text-4xl text-secondary">{email}</span>!</h1>
+        <p class="text max-w-[70ch] text-gray-600 text-center px-4">En esta sección podrás gestionar el catálogo de productos que se muestra en la web de Venepan y acceder a los mensajes enviados a través del formulario de contacto.</p>
         
-        <div class="flex flex-wrap gap-6 mt-14">
-            <div class="bg-white w-[350px] h-52 p-6 border border-gray-200 rounded-3xl flex flex-col justify-between gap-2 card-shadow">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-14 w-full max-w-7xl px-4">
+            <div class="bg-white w-full h-52 p-6 border border-gray-200 rounded-3xl flex flex-col justify-between gap-2 card-shadow">
                 <div>
                     <h2 class="text-xl text-gray-800 font-semibold mb-1">Gestión de Productos</h2>
                     <p class="text-gray-600">Añade, modifica y elimina productos del catálogo web de Venepan</p>
@@ -22,7 +22,7 @@ export const prerender = false;
                 <a href="/dashboard/gestionar-productos" class="dashboard-btn">Gestionar productos</a>
             </div>
 
-            <div class="bg-white w-[350px] h-52 p-6 border border-gray-200 rounded-3xl flex flex-col justify-between gap-2 card-shadow">
+            <div class="bg-white w-full h-52 p-6 border border-gray-200 rounded-3xl flex flex-col justify-between gap-2 card-shadow">
                 <div>
                     <h2 class="text-xl text-gray-800 font-semibold mb-1">Gestión de Categorías</h2>
                     <p class="text-gray-600">Añade, modifica y elimina categorías vinculadas a los productos</p>
@@ -31,7 +31,7 @@ export const prerender = false;
                 <a href="/dashboard/gestionar-categorias" class="dashboard-btn bg-orange-600 hover:bg-orange-600/80">Gestionar categorías</a>
             </div>
 
-            <div class="bg-white w-[350px] h-52 p-6 border border-gray-200 rounded-3xl flex flex-col justify-between gap-2 card-shadow">
+            <div class="bg-white w-full h-52 p-6 border border-gray-200 rounded-3xl flex flex-col justify-between gap-2 card-shadow">
                 <div>
                     <h2 class="text-xl text-gray-800 font-semibold mb-1">Mensajes de Clientes</h2>
                     <p class="text-gray-600">Accede a los mensajes enviados a través del formulario de contacto</p>
