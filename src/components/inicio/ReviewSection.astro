@@ -26,8 +26,8 @@ const reviews = await getCollection('reviews');
               loading="lazy"
             />
           </div>
-          <h3 class="review-name text-gray-800 font-semibold mb-2">{review.data.name}</h3>
-          <p class="review-text text-gray-600">
+          <h3 class="review-name text-gray-800 font-semibold mb-2 2xl:text-2xl">{review.data.name}</h3>
+          <p class="review-text text-gray-600 text-xl 2xl:text-2xl">
             {review.data.content}
           </p>
         </div>

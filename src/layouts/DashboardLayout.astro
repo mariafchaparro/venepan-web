@@ -30,10 +30,10 @@ const navLinks = [
 	</head>
 	<body class="flex min-h-screen">
 		<main class="bg-light-blue-dashboard h-full w-full flex relative">
-			<!-- Mobile Menu Button -->
+			<!-- Mobile Menu Button (Hamburger) -->
 			<button 
 				id="mobile-menu-btn" 
-				class="md:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-gray-50"
+				class="md:hidden fixed top-4 right-4 z-50 p-2 bg-white rounded-lg shadow-lg border border-gray-200 hover:bg-gray-50"
 				aria-label="Toggle menu"
 			>
 				<svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,11 +47,11 @@ const navLinks = [
 			<!-- Sidebar -->
             <aside id="sidebar" class="bg-white w-4/5 md:w-1/5 fixed top-0 -left-full md:left-0 h-screen max-h-dvh p-6 flex flex-col gap-20 border-r border-gray-200 z-40 transition-all duration-300 ease-in-out">
                 <section class="flex items-center gap-4">
-                    <img src="/icons/logo.svg" alt="Logo" class="w-12"/>
+                    <img src="/icons/logo.svg" alt="Logo" class="w-12 2xl:w-16"/>
                     
 					<div class="flex flex-col">
-						<h1 class="text-gray-800 font-semibold">Alimentos Venepan</h1>
-						<h2 class="text-gray-600 font-semibold text-sm">Módulo Administrativo</h2>
+						<h1 class="text-gray-800 font-semibold 2xl:text-lg">Alimentos Venepan</h1>
+						<h2 class="text-gray-600 font-semibold text-sm 2xl:text-lg">Módulo Administrativo</h2>
 					</div>
                 </section>
 
@@ -62,15 +62,15 @@ const navLinks = [
 							const isActive = currentPath === link.href;
 							
 							return (
-								<li class="mb-4">
+								<li class="mb-4 2xl:mb-8">
 									<a 
 										href={link.href} 
 										class:list={[
-											"nav-link text-sm text-gray-800 rounded-2xl block w-full px-4 py-3 cursor-pointer hover:bg-secondary/5 hover:rounded-xl hover:font-semibold hover:text-secondary", 
+											"nav-link text-sm text-gray-800 rounded-2xl block w-full px-4 py-3 cursor-pointer hover:bg-secondary/5 hover:rounded-xl hover:font-semibold hover:text-secondary 2xl:text-lg", 
 											isActive && activeClass 
 										]}
 									>
-										<img src={`/icons/${link.icon}`} alt={`${link.text} icon`} class="inline w-4 mr-4" />
+										<img src={`/icons/${link.icon}`} alt={`${link.text} icon`} class="inline w-4 mr-4 2xl:w-6" />
 										{link.text}
 									</a>
 								</li>
@@ -78,11 +78,11 @@ const navLinks = [
 						})}
 					</ul>
 					<div>
-						<button id="signout-btn" type="submit" class="text-sm text-gray-800 text-start rounded-2xl block w-full px-4 py-3 cursor-pointer hover:bg-secondary/5 hover:rounded-xl hover:font-semibold hover:text-secondary">
-							<img src="/icons/logout.svg" alt="Cerrar Sesión" class="inline w-4 mr-4" />
+						<button id="signout-btn" type="submit" class="text-sm text-gray-800 text-start rounded-2xl block w-full px-4 py-3 cursor-pointer hover:bg-secondary/5 hover:rounded-xl hover:font-semibold hover:text-secondary 2xl:text-lg">
+							<img src="/icons/logout.svg" alt="Cerrar Sesión" class="inline w-4 mr-4 2xl:w-6" />
 							Cerrar Sesión
 						</button>
-						<p class="text-sm text-gray-600">Usuario: <span class="font-semibold">{email}</span> </p>
+						<p class="text-sm mt-2 text-gray-600 2xl:text-lg">Usuario: <span class="font-semibold 2xl:text-lg">{email}</span> </p>
 					</div>
 				</nav>				
             </aside>
@@ -94,54 +94,54 @@ const navLinks = [
 		</main>
 
 		<script>
-		// Mobile menu toggle
-		const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-		const sidebar = document.getElementById('sidebar');
-		const mobileOverlay = document.getElementById('mobile-overlay');
-		const navLinks = document.querySelectorAll('.nav-link');
+	// Mobile menu toggle
+	const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+	const sidebar = document.getElementById('sidebar');
+	const mobileOverlay = document.getElementById('mobile-overlay');
+	const navLinks = document.querySelectorAll('.nav-link');
 
-		function openMobileMenu() {
-			sidebar?.classList.remove('-left-full');
-			sidebar?.classList.add('left-0');
-			mobileOverlay?.classList.remove('hidden');
-			document.body.style.overflow = 'hidden';
+	function openMobileMenu() {
+		sidebar?.classList.remove('-left-full');
+		sidebar?.classList.add('left-0');
+		mobileOverlay?.classList.remove('hidden');
+		document.body.style.overflow = 'hidden';
+	}
+
+	function closeMobileMenu() {
+		sidebar?.classList.add('-left-full');
+		sidebar?.classList.remove('left-0');
+		mobileOverlay?.classList.add('hidden');
+		document.body.style.overflow = '';
+	}
+
+	// Toggle menu on hamburger button click
+	mobileMenuBtn?.addEventListener('click', () => {
+		const isOpen = sidebar?.classList.contains('left-0');
+		if (isOpen) {
+			closeMobileMenu();
+		} else {
+			openMobileMenu();
 		}
+	});
 
-		function closeMobileMenu() {
-			sidebar?.classList.add('-left-full');
-			sidebar?.classList.remove('left-0');
-			mobileOverlay?.classList.add('hidden');
-			document.body.style.overflow = '';
-		}
+	// Close menu when clicking overlay
+	mobileOverlay?.addEventListener('click', closeMobileMenu);
 
-		// Toggle menu on button click
-		mobileMenuBtn?.addEventListener('click', () => {
-			const isOpen = sidebar?.classList.contains('left-0');
-			if (isOpen) {
-				closeMobileMenu();
-			} else {
-				openMobileMenu();
-			}
-		});
-
-		// Close menu when clicking overlay
-		mobileOverlay?.addEventListener('click', closeMobileMenu);
-
-		// Close menu when clicking nav links (on mobile)
-		navLinks.forEach(link => {
-			link.addEventListener('click', () => {
-				if (window.innerWidth < 768) {
-					closeMobileMenu();
-				}
-			});
-		});
-
-		// Close menu on window resize to desktop size
-		window.addEventListener('resize', () => {
-			if (window.innerWidth >= 768) {
+	// Close menu when clicking nav links (on mobile)
+	navLinks.forEach(link => {
+		link.addEventListener('click', () => {
+			if (window.innerWidth < 768) {
 				closeMobileMenu();
 			}
 		});
+	});
+
+	// Close menu on window resize to desktop size
+	window.addEventListener('resize', () => {
+		if (window.innerWidth >= 768) {
+			closeMobileMenu();
+		}
+	});
 	</script>
 
 	<script>

@@ -17,13 +17,13 @@ const navLinks = [
 
 // Conditional classes for desktop navbar
 const navbarClasses = ["w-full flex items-center justify-between px-6 py-4 md:px-12 lg:px-28 xl:px-36 2xl:px-56"];
-const homeLinkClasses = "text-gray-800 hover:text-primary hover:font-medium";
-const otherLinkClasses = "text-white hover:bg-white/25";
+const homeLinkClasses = "text-gray-800 hover:text-primary hover:font-medium 2xl:text-lg";
+const otherLinkClasses = "text-white hover:bg-white/25 2xl:text-lg 2xl:rounded-4xl";
 const linkClasses = classicHeader ? homeLinkClasses : otherLinkClasses;
 
 // Classes for the active link
 const MobileLinkClasses = "block w-full px-4 py-3 cursor-pointer hover:bg-primary/5 hover:rounded-xl hover:font-semibold hover:text-primary"
-const activeClassesDesktop = classicHeader ? "text-primary text-gray-800 font-medium" : "bg-white/25";
+const activeClassesDesktop = classicHeader ? "text-primary text-gray-800 font-medium" : "bg-white/25 2xl:text-lg 2xl:rounded-4xl";
 const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary";
 ---
 
@@ -59,7 +59,7 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
         <!-- Botón de inicio de sesión -->
         <!-- <a href="/ingresar" class:list={["text-sm font-semibold", classicHeader? "text-primary" : "text-white"]}>Iniciar Sesión</a> -->
         <!-- <hr class:list={["rotate-90 w-3 h-0.5", classicHeader? "text-gray-700" : "text-white"]}/> --> 
-        <a href="/contacto" class="btn text-sm hidden md:flex">Contáctanos</a>
+        <a href="/contacto" class="btn text-sm hidden md:flex 2xl:text-lg 2xl:rounded-4xl">Contáctanos</a>
     </div>
     
     <button 

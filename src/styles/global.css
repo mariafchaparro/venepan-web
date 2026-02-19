@@ -32,17 +32,17 @@
         @apply text-gray-600 mb-6 md:text-lg 2xl:text-2xl;
     }
     .btn {
-        @apply bg-primary min-w-32 inline-flex items-center justify-center font-medium text-white px-5 py-3 rounded-3xl hover:bg-red-700/90 cursor-pointer transition-all hover:scale-95 active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed; 
+        @apply bg-primary min-w-32 inline-flex items-center justify-center font-medium text-white px-5 py-3 rounded-3xl hover:bg-red-700/90 cursor-pointer transition-all hover:scale-95 active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed 2xl:text-lg 2xl:rounded-4xl; 
     }
     .secondary-btn {
-        @apply bg-light-blue min-w-32 inline-flex items-center justify-center font-medium text-secondary px-5 py-3 rounded-3xl hover:bg-secondary/20 cursor-pointer transition-all hover:scale-95 active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed; 
+        @apply bg-light-blue min-w-32 inline-flex items-center justify-center font-medium text-secondary px-5 py-3 rounded-3xl hover:bg-secondary/20 cursor-pointer transition-all hover:scale-95 active:scale-100 disabled:opacity-50 disabled:cursor-not-allowed 2xl:text-lg 2xl:rounded-4xl; 
 
     }
     .recipe-btn {
-        @apply min-w-0 px-5 text-sm
+        @apply min-w-0 px-5 text-sm 2xl:text-lg
     }
     .dashboard-btn {
-        @apply bg-secondary px-4 py-3 text-white font-semibold w-fit rounded-3xl hover:bg-secondary/80 transition-colors cursor-pointer
+        @apply bg-secondary px-4 py-3 text-white font-semibold w-fit rounded-3xl hover:bg-secondary/80 transition-colors cursor-pointer 2xl:text-lg 2xl:rounded-4xl
     }
     .section-padding {
         @apply px-6 py-10 min-w-[300px] sm:p-12 md:p-16 lg:p-20 lg:px-28 xl:p-28 lg:min-h-[470px] 2xl:px-56 2xl:py-36;
