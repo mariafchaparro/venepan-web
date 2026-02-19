@@ -11,7 +11,7 @@ import 'swiper/css/pagination';
 
 interface Banner {
   id: number;
-  title: string;
+  titleBanner: string;
   description: string;
   buttonText: string;
   buttonLink: string;
@@ -42,7 +42,7 @@ const themeStyles = {
 const banners: Banner[] = [
   {
     id: 1,
-    title: "¡Crunch, sabor y energía!",
+    titleBanner: "¡Crunch, sabor y energía!",
     description: "Descubre la variedad de nuestros cereales para toda la familia.",
     buttonText: "Ver productos",
     buttonLink: "/productos",
@@ -52,7 +52,7 @@ const banners: Banner[] = [
   },
   {
     id: 2,
-    title: "El pan de cada día, más delicioso.",
+    titleBanner: "El pan de cada día, más delicioso.",
     description: "Suavidad y sabor perfectos para sándwiches, perros y hamburguesas.",
     buttonText: "Ver productos",
     buttonLink: "/productos",
@@ -62,7 +62,7 @@ const banners: Banner[] = [
   },
   {
     id: 3,
-    title: "¡El futuro de la cocina llegó!",
+    titleBanner : "¡El futuro de la cocina llegó!",
     description: "Descubre nuestra nueva soya texturizada: proteína versátil y deliciosa.",
     buttonText: "Ver productos",
     buttonLink: "/productos",
@@ -84,14 +84,14 @@ const banners: Banner[] = [
             
             <div class="min-w-[324px] flex flex-col items-center text-center md:items-start md:text-start">
               {/* Aplicar clases desde el objeto de mapeo */}
-              <h1 class={`main-title mb-3 ${styles.text}`}>{banner.title}</h1>
+              <h1 class={`main-title mb-3 ${styles.text}`}>{banner.titleBanner}</h1>
               <p class={`text-lg/5 font-medium max-w-[40ch] md:text-xl/7 ${styles.text}`}>{banner.description}</p>
               <a href={banner.buttonLink} class={`btn hidden md:flex md:mt-4 lg:mt-8 ${styles.bg} ${styles.hover}`}>
                 {banner.buttonText}
               </a>
             </div>
   
-            <Image src={banner.image} alt={`Banner de ${banner.title}`} class="w-[300px] lg:w-[400px] xl:w-[430px] max-w-[430px]" loading={'eager'}  />
+            <Image src={banner.image} alt={`Banner de ${banner.titleBanner}`} class="w-[300px] lg:w-[400px] xl:w-[430px] max-w-[430px]" loading={'eager'}  />
             
             <a href={banner.buttonLink} class={`btn md:hidden ${styles.bg} ${styles.hover}`}>
               {banner.buttonText}
