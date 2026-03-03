@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Analytics from '@vercel/analytics/astro';
 
 const { title, currentPath } = Astro.props;
 const user = Astro.locals.user;
@@ -94,90 +95,91 @@ const navLinks = [
 		</main>
 
 		<script>
-	// Mobile menu toggle
-	const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-	const sidebar = document.getElementById('sidebar');
-	const mobileOverlay = document.getElementById('mobile-overlay');
-	const navLinks = document.querySelectorAll('.nav-link');
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.getElementById('sidebar');
+            const mobileOverlay = document.getElementById('mobile-overlay');
+            const navLinks = document.querySelectorAll('.nav-link');
 
-	function openMobileMenu() {
-		sidebar?.classList.remove('-left-full');
-		sidebar?.classList.add('left-0');
-		mobileOverlay?.classList.remove('hidden');
-		document.body.style.overflow = 'hidden';
-	}
+            function openMobileMenu() {
+                sidebar?.classList.remove('-left-full');
+                sidebar?.classList.add('left-0');
+                mobileOverlay?.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
 
-	function closeMobileMenu() {
-		sidebar?.classList.add('-left-full');
-		sidebar?.classList.remove('left-0');
-		mobileOverlay?.classList.add('hidden');
-		document.body.style.overflow = '';
-	}
+            function closeMobileMenu() {
+                sidebar?.classList.add('-left-full');
+                sidebar?.classList.remove('left-0');
+                mobileOverlay?.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
 
-	// Toggle menu on hamburger button click
-	mobileMenuBtn?.addEventListener('click', () => {
-		const isOpen = sidebar?.classList.contains('left-0');
-		if (isOpen) {
-			closeMobileMenu();
-		} else {
-			openMobileMenu();
-		}
-	});
+            // Toggle menu on hamburger button click
+            mobileMenuBtn?.addEventListener('click', () => {
+                const isOpen = sidebar?.classList.contains('left-0');
+                if (isOpen) {
+                    closeMobileMenu();
+                } else {
+                    openMobileMenu();
+                }
+            });
 
-	// Close menu when clicking overlay
-	mobileOverlay?.addEventListener('click', closeMobileMenu);
+            // Close menu when clicking overlay
+            mobileOverlay?.addEventListener('click', closeMobileMenu);
 
-	// Close menu when clicking nav links (on mobile)
-	navLinks.forEach(link => {
-		link.addEventListener('click', () => {
-			if (window.innerWidth < 768) {
-				closeMobileMenu();
-			}
-		});
-	});
+            // Close menu when clicking nav links (on mobile)
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 768) {
+                        closeMobileMenu();
+                    }
+                });
+            });
 
-	// Close menu on window resize to desktop size
-	window.addEventListener('resize', () => {
-		if (window.innerWidth >= 768) {
-			closeMobileMenu();
-		}
-	});
-	</script>
+            // Close menu on window resize to desktop size
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768) {
+                    closeMobileMenu();
+                }
+            });
+	    </script>
 
-	<script>
-		const signoutBtn = document.getElementById('signout-btn');
+        <script>
+            const signoutBtn = document.getElementById('signout-btn');
 
-			signoutBtn?.addEventListener('click', async () => {
-				if (signoutBtn instanceof HTMLButtonElement) {
-					signoutBtn.disabled = true;
-					signoutBtn.textContent = 'Cerrando...';
-				}
+                signoutBtn?.addEventListener('click', async () => {
+                    if (signoutBtn instanceof HTMLButtonElement) {
+                        signoutBtn.disabled = true;
+                        signoutBtn.textContent = 'Cerrando...';
+                    }
 
-				try {
-					const response = await fetch('/api/auth/signout', {
-						method: 'POST',
-					});
-					
-					const data = await response.json();
+                    try {
+                        const response = await fetch('/api/auth/signout', {
+                            method: 'POST',
+                        });
+                        
+                        const data = await response.json();
 
-					if (response.ok && data.redirectUrl) {
-						window.location.href = data.redirectUrl;
-					} else {
-						// En caso de error (ej: error de red o de servidor)
-						alert(data.error || 'Error al cerrar sesión. Intenta recargar la página.');
-					}
+                        if (response.ok && data.redirectUrl) {
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            // En caso de error (ej: error de red o de servidor)
+                            alert(data.error || 'Error al cerrar sesión. Intenta recargar la página.');
+                        }
 
-				} catch (error) {
-					// Error de conexión de red
-					alert('Error de conexión. Verifica tu red.');
-				} finally {
-					// Restablecer el botón en caso de error
-					if (signoutBtn instanceof HTMLButtonElement) {
-						signoutBtn.disabled = false;
-						signoutBtn.textContent = 'Cerrar Sesión';
-					}
-				}
-			})
-		</script>
+                    } catch (error) {
+                        // Error de conexión de red
+                        alert('Error de conexión. Verifica tu red.');
+                    } finally {
+                        // Restablecer el botón en caso de error
+                        if (signoutBtn instanceof HTMLButtonElement) {
+                            signoutBtn.disabled = false;
+                            signoutBtn.textContent = 'Cerrar Sesión';
+                        }
+                    }
+                })
+        </script>
+        <Analytics />
 	</body>
 </html>
