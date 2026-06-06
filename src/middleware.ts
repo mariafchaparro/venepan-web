@@ -16,7 +16,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const refreshToken = cookies.get("sb-refresh-token")?.value;
 
     if (isProtectedRoute) {
-
         if (!accessToken || !refreshToken) {
             
             cookies.delete("sb-access-token", { path: "/" });
@@ -58,7 +57,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
             // Guardar el usuario en el contexto para uso posterior
             context.locals.user = data.user;
-            return next();
+
+            const response = await next();
+            response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+            response.headers.set('Pragma', 'no-cache');
+            response.headers.set('Expires', '0');
+            return response;
 
         } catch (error) {
             console.log("Error al validar la sesión", error)

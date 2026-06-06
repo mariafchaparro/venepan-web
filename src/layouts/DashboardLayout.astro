@@ -152,6 +152,21 @@ const navLinks = [
 	    </script>
 
         <script>
+            async function guardDashboardAccess() {
+                try {
+                    const res = await fetch('/api/auth/session', { cache: 'no-store', credentials: 'same-origin' });
+                    const data = await res.json();
+                    if (!data.authenticated) {
+                        window.location.replace('/ingresar');
+                    }
+                } catch {
+                    window.location.replace('/ingresar');
+                }
+            }
+
+            guardDashboardAccess();
+            window.addEventListener('pageshow', guardDashboardAccess);
+
             const signoutBtn = document.getElementById('signout-btn');
 
                 signoutBtn?.addEventListener('click', async () => {
@@ -168,7 +183,7 @@ const navLinks = [
                         const data = await response.json();
 
                         if (response.ok && data.redirectUrl) {
-                            window.location.href = data.redirectUrl;
+                            window.location.replace(data.redirectUrl);
                         } else {
                             // En caso de error (ej: error de red o de servidor)
                             alert(data.error || 'Error al cerrar sesión. Intenta recargar la página.');
