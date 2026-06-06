@@ -134,9 +134,9 @@ const pageDescription = isEditMode
         return errors;
     }
 
-    function showErrors(errors) {
+    function showErrors(errors: string[]) {
         if (errors.length > 0 && formErrors && errorList) {
-            errorList.innerHTML = errors.map(err => `<li>${err}</li>`).join('');
+            errorList.innerHTML = errors.map((err: string) => `<li>${err}</li>`).join('');
             formErrors.classList.remove('hidden');
         } else if (formErrors) {
             formErrors.classList.add('hidden');

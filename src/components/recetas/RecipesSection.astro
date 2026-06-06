@@ -20,7 +20,7 @@ const recipes = await getCollection('recipes');
                     preparationTime={recipe.data.preparationTime}
                     servings={recipe.data.servings}
                     stars={recipe.data.stars}
-                    slug={recipe.slug}
+                    slug={recipe.id}
                 />
             ))
         }

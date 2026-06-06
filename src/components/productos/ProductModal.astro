@@ -1,5 +1,5 @@
 ---
-import type { Product, Benefit } from '../../actions/products';
+import type { Product } from '../../actions/products';
 
 interface Props {
   products: Product[];
@@ -8,10 +8,10 @@ interface Props {
 const { products } = Astro.props;
 ---
 
-<div id="product-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/25 bg-opacity-50">
+<div id="product-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/25 bg-opacity-50" role="dialog" aria-modal="true" aria-labelledby="modal-name" aria-hidden="true">
     <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-4xl w-full md:h-[500px] max-h-[90vh] overflow-y-auto relative">
         <button id="modal-close-btn" class="absolute top-5 right-4 z-10 cursor-pointer" aria-label="Cerrar modal">
-            <img src="/icons/x.svg" alt="Cerrar" loading={'eager'}/>
+            <img src="/icons/x.svg" alt="" aria-hidden="true" loading={'eager'}/>
         </button>
   
         <div class="flex flex-col h-full md:flex-row gap-8 md:gap-12">   
@@ -44,7 +44,7 @@ const { products } = Astro.props;
 </div>
 
 
-<script define:vars={{ products }}>
+<script is:inline define:vars={{ products }}>
     const modal = document.getElementById('product-modal');
     const closeButton = document.getElementById('modal-close-btn');
     const modalImage = document.getElementById('modal-image');
@@ -109,6 +109,8 @@ const { products } = Astro.props;
         
         modal.classList.remove('hidden');
         modal.classList.add('flex');
+        modal.setAttribute('aria-hidden', 'false');
+        closeButton?.focus();
         document.body.style.overflow = 'hidden';
     }
 
@@ -117,6 +119,7 @@ const { products } = Astro.props;
         
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+        modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = 'unset';
     }
 </script>

@@ -1,5 +1,4 @@
 import { defineAction, ActionError } from "astro:actions";
-import { z } from "astro:schema";
 import { supabase } from "../lib/supabase";
 
 export type Message = {

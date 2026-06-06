@@ -16,6 +16,7 @@ const {
   currentPath
 } = Astro.props;
 
+const imageFormat = image.format === 'svg' ? 'svg' : 'webp';
 ---
 
 <section class="relative w-full h-[80vh] md:rounded-b-[52px] overflow-hidden 2xl:h-[60vh]">
@@ -24,7 +25,7 @@ const {
     alt={title}
     class="absolute inset-0 w-full h-full object-cover md:rounded-b-[52px]" 
     loading="eager"
-    format="webp"
+    format={imageFormat}
   />
 
   <!-- Overlay -->

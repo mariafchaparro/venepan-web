@@ -25,13 +25,19 @@ Astro.response.headers.set('Expires', '0');
                 <p class="text-gray-600 mb-0">Ingresa tus datos para continuar</p>
             </div>
             
-            <div id="error-message" class="max-w-[40ch] bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded  justify-center hidden">
+            <div id="error-message" class="max-w-[40ch] bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded justify-center hidden" role="alert" aria-live="assertive">
             </div>
 
-            <form action="/api/auth/signin" id="signin-form" class="flex flex-col gap-6 w-80">
-                <input id="email" name="email" type="email" placeholder="Email" required autocomplete="email" class="border-b-2 border-light-gray p-3 focus:border-primary outline-none"/>
+            <form action="/api/auth/signin" id="signin-form" class="flex flex-col gap-6 w-80" aria-label="Formulario de inicio de sesión">
+                <div class="flex flex-col gap-1">
+                    <label for="email" class="text-gray-600 text-sm font-medium">Correo electrónico</label>
+                    <input id="email" name="email" type="email" placeholder="Email" required autocomplete="email" class="border-b-2 border-light-gray p-3 focus:border-primary outline-none"/>
+                </div>
 
-                <input id="password" name="password" type="password" placeholder="Contraseña" required autocomplete="current-password" class="border-b-2 border-light-gray p-3 w-full focus:border-primary outline-none"/>
+                <div class="flex flex-col gap-1">
+                    <label for="password" class="text-gray-600 text-sm font-medium">Contraseña</label>
+                    <input id="password" name="password" type="password" placeholder="Contraseña" required autocomplete="current-password" class="border-b-2 border-light-gray p-3 w-full focus:border-primary outline-none"/>
+                </div>
                 
                 <div class="flex justify-between items-center">
                     <label for="show-password" class="text-gray-600 text-sm flex items-center gap-1">

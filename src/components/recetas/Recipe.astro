@@ -20,10 +20,10 @@ const {
    
     <h3 class="text-gray-800 text-lg font-medium 2xl:text-xl 2xl:mb-2">{name}</h3>
     <div class="flex gap-2 items-center mb-6 2xl:mb-8">
-        <div class="flex gap-0.5">
+        <div class="flex gap-0.5" role="img" aria-label={`Calificación: ${stars} de 5 estrellas`}>
             {
                 Array.from({length: stars}).map(() => (
-                    <img src="/icons/star.svg" alt="Estrella" class="w-3 2xl:w-4" />
+                    <img src="/icons/star.svg" alt="" aria-hidden="true" class="w-3 2xl:w-4" />
                 ))
             }
         </div>

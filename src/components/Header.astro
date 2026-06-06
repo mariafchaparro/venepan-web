@@ -64,15 +64,20 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
     
     <button 
         class="menu-button md:hidden cursor-pointer z-50" 
-        data-menu-button aria-controls="mobile-menu" aria-expanded="false" >
+        data-menu-button 
+        aria-controls="mobile-menu" 
+        aria-expanded="false"
+        aria-label="Abrir menú de navegación">
 
-        <img src={menuIcon} alt="Abrir menu" class="w-5 h-5">
+        <img src={menuIcon} alt="" aria-hidden="true" class="w-5 h-5">
     </button>
 </header>
 
 <div 
     id="mobile-menu"
-    data-menu-container class="fixed inset-0 z-40 md:hidden pointer-events-none" >
+    data-menu-container 
+    class="fixed inset-0 z-40 md:hidden pointer-events-none"
+    aria-hidden="true">
     <div 
         data-menu-backdrop 
         class="fixed inset-0 bg-gray-700/45 transition-opacity duration-300 ease-in-out opacity-0"
@@ -88,8 +93,9 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
 
             <button 
             data-close-menu-button
-            class="cursor-pointer">
-                <img src="/icons/x.svg" alt="Cerrar menú">
+            class="cursor-pointer"
+            aria-label="Cerrar menú de navegación">
+                <img src="/icons/x.svg" alt="" aria-hidden="true">
             </button>
             
         </div>
@@ -136,6 +142,8 @@ const activeClassesMobile = "bg-primary/5 rounded-xl font-semibold text-primary"
         const isExpanded = menuButton?.getAttribute('aria-expanded') === 'true';
 
         menuButton?.setAttribute('aria-expanded', String(!isExpanded));
+        menuButton?.setAttribute('aria-label', isExpanded ? 'Abrir menú de navegación' : 'Cerrar menú de navegación');
+        menuContainer?.setAttribute('aria-hidden', String(isExpanded));
 
         // Habilita o deshabilita la interacción con el menú
         menuContainer?.classList.toggle('pointer-events-none');

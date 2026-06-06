@@ -36,7 +36,7 @@ const reviews = await getCollection('reviews');
   </div>
 
   <!-- Mobile Layout - Swiper -->
-  <div class="block md:hidden w-full">
+  <div class="block md:hidden w-full" aria-label="Opiniones de clientes" aria-roledescription="carrusel">
     <div class="swiper mobile-swiper">    
       <div class="swiper-wrapper">
         {reviews.map((review) => (

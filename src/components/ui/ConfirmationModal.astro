@@ -16,7 +16,7 @@ const {
 } = Astro.props;
 ---
 
-<div id={id} class="hidden fixed inset-0 z-50 items-center justify-center h-full w-full">
+<div id={id} class="hidden fixed inset-0 z-50 items-center justify-center h-full w-full" role="dialog" aria-modal="true" aria-labelledby={`${id}-title`} aria-hidden="true">
     <!-- Overlay/Backdrop -->
     <div id={`${id}-backdrop`} class="fixed inset-0 bg-gray-600 opacity-50 transition-opacity"></div>
 
@@ -28,7 +28,7 @@ const {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                 </svg>
             </div>
-            <h3 class="text-lg leading-6 font-medium text-gray-800" id="modal-title">{title}</h3>
+            <h3 class="text-lg leading-6 font-medium text-gray-800" id={`${id}-title`}>{title}</h3>
             <div class="mt-2 px-7 py-3">
                 <p class="text-gray-500" id="modal-message">{message}</p>
             </div>
@@ -50,7 +50,7 @@ const {
     </div>
 </div>
 
-<script define:vars={{ id }}>
+<script is:inline define:vars={{ id }}>
     const modal = document.getElementById(id);
     const backdrop = document.getElementById(`${id}-backdrop`);
     const cancelButton = document.getElementById(`${id}-cancel`);
@@ -66,6 +66,7 @@ const {
         if (modal) {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+            modal.setAttribute('aria-hidden', 'true');
         }
     }
 
@@ -97,6 +98,7 @@ const {
 
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            modal.setAttribute('aria-hidden', 'false');
         }
         
         // Manejar confirmación

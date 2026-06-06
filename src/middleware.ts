@@ -4,14 +4,12 @@ import { supabase } from './lib/supabase';
 export const onRequest = defineMiddleware(async (context, next) => {
     const { cookies, url, redirect, isPrerendered } = context;
 
-    // Si la página está prerenderizada, no ejecutar lógica de autenticación
-    // Esto evita el error de acceder a cookies/headers en páginas estáticas
-
     if (isPrerendered) {
         return next();
     }
 
-    const isProtectedRoute = url.pathname.startsWith('/dashboard');
+    const pathname = decodeURIComponent(url.pathname).replace(/\/+$/, '') || '/';
+    const isProtectedRoute = pathname.startsWith('/dashboard');
 
     // Obtener los tokens de las cookies:
     const accessToken = cookies.get("sb-access-token")?.value;
@@ -73,7 +71,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
     
     // Redirigir usuarios autenticados que intentan acceder a /ingresar
-    if (url.pathname === '/ingresar' && accessToken && refreshToken) {
+    if (pathname === '/ingresar' && accessToken && refreshToken) {
         return redirect('/dashboard'); 
     }
     

@@ -7,7 +7,7 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="es" class="scroll-smooth">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -21,13 +21,13 @@ const { title } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body class="flex flex-col min-h-screen">
-        <Analytics />
-		<main class="flex-grow">
+		<a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:text-primary focus:font-semibold">
+			Saltar al contenido principal
+		</a>
+		<main id="main-content" class="flex-grow">
 			<slot />
 		</main>
 		<Footer></Footer>
-
-        
 		<script src="/src/js/main.js"></script>
         <Analytics />
 	</body>

@@ -11,7 +11,7 @@ export async function getStaticPaths() {
   const recipes = await getCollection("recipes");
 
   return recipes.map(recipe => ({
-    params: { slug: recipe.slug }, // La URL (ej: /recetas/tacos-de-soya)
+    params: { slug: recipe.id },
     props: { recipe }, // Los datos que se pasan al componente
   }));
 }
@@ -50,9 +50,9 @@ const { name, image, preparationTime, servings, stars, ingredients, steps } = da
         <span class="text-gray-600 font-medium">{servings} porciones</span>
       </div>
       
-      <div class="flex gap-0.5">
+      <div class="flex gap-0.5" role="img" aria-label={`Calificación: ${stars} de 5 estrellas`}>
         {Array.from({ length: stars }).map(() => (
-          <img src="/icons/star.svg" alt="Estrella" class="w-4" />
+          <img src="/icons/star.svg" alt="" aria-hidden="true" class="w-4" />
         ))}
         <span class="text-gray-600 text-sm font-medium">(10 reseñas)</span>
       </div>
